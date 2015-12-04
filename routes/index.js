@@ -4,7 +4,9 @@ var fs = require('fs');
 var github = require('octonode');
 var qs = require('querystring');
 var url = require('url');
-var settings = require('../settings.json');
+var settings;
+
+
 var calmgr = require('../public/javascripts/calmgr.json');
 
 var router = express.Router();
@@ -168,10 +170,14 @@ function updateCalendarData(y,m,d) {
 
 /* GET index main page. */
 router.get('/', function(req, res, next) {
-    // Check settings
-    if (!settings.defined) {
-        res.redirecting("/settings");
+    try {
+        settings = require('../settings.json');
     }
+    catch (e) {
+        console.log('settings not defined. Must be done');
+        res.redirect("/settings");
+    }
+    settings = require('../settings.json');
 
     // Redirecting to github login
     res.redirect("/login");
@@ -186,9 +192,11 @@ router.get('/settings', function(req, res, next) {
 
 /* POST settings page. */
 router.post('/settings', function(req, res, next) {
-    fs.writeFile("my_settings.json", "Hey there!", function(err) {
+    var answer = JSON.stringify(req.body,"\t");
+    console.log('SETTINGS ' + answer);
+    fs.writeFile("settings.json", answer, function(err) {
         if(err) {
-            return console.log(err);
+            return console.log('ERR FILE: ' + err);
         }
 
         console.log("The file was saved!");

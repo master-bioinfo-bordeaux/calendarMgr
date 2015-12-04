@@ -1,14 +1,25 @@
 extends layout
  
 block content
-    h1= title
-    form.form-horizontal.col-md-offset-1.col-md-6(name="settings", method="post")
+
+
+    div.splash
+        div.container
+            h1 Calendar Management
+            h2 Settings
+            hr
+    br
+    br
+    form.form-horizontal.col-md-offset-1.col-md-6(action="/settings", method="POST")
         div.form-group
             label ID
             input.form-control(type="text", name="id")
         div.form-group
             label Secret
             input.form-control(type="text", name="secret")
+        div.form-group
+            label Redirect URI
+            input.form-control(type="text", name="redirect_uri")
         div.form-group
             label Year
             select.form-control(name="default_year")
