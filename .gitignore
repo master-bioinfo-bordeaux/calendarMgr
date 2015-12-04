@@ -6,6 +6,7 @@ settings.json
 # gedit tmp files
 #################
 *.*~
+www~
 
 # node_modules directory
 #################
