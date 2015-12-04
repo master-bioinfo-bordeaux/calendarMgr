@@ -1,0 +1,104 @@
+mixin select-option(val, name)
+    if (val === name)
+        option(value=name, selected="selected")= name
+    else
+        option(value=name)= name
+
+mixin session(title,num)
+    div.col-lg-12 
+
+        label.first= title
+            div.col-lg-6
+                div.form-group
+                    label.first Type
+                    select.contents#type(name='type'+ num)
+                        each typ, i in settings.types
+                            +select-option(event.comment, typ)
+            div.col-lg-6
+                div.form-group
+                    label.control-label Lecturer
+                    select.form-control#lecturer(name="lecturer"+ num )
+                        optgroup
+                            each one, i in settings.people
+                                +select-option(event.lecturer, one)
+                        optgroup
+                            option(value="Multimedia") Multimedia
+            div.col-lg-6
+                div.form-group
+                    label.first Students
+                    select.contents#students(name="students"+ num )
+                        each group, i in settings.students
+                            option(value='#{group}' ) #{group}
+                
+            div.col-lg-6
+
+                div.form-group
+                    label.first Date
+                    input.datepickr(placeholder="yyyy-mm-dd")
+
+                    div.form-group
+                        label.first From 
+                        select.contents#starthh(name="starthh"+ num )
+                            each hour, i in settings.hours
+                                option(value=hour ) #{hour}
+                        label :
+                        select.contents#startmm(name="startmm"+ num )
+                            each mins, i in settings.minutes
+                                option(value=mins ) #{mins}
+                        label To 
+                        select.contents#endhh(name="endhh"+ num )
+                            each hour, i in settings.hours
+                                option(value=hour ) #{hour}
+                        label :
+                        select.contents#endmm(name="endmm"+ num )
+                            each mins, i in settings.minutes
+                                option(value=mins ) #{mins}
+ 
+                div.form-group
+                    label.first Location
+                    select.contents#location(name="location"+ num )
+                        each loc, i in settings.locations
+                            +select-option(event.locationBuilding, loc)
+                   label.first Room/Amphi
+                    input.contents#room(name="room"+ num, value=event.locationRoom,placeholder="000" )
+
+
+extends layout
+
+block content
+
+        div.splash
+            div.container
+                h1 Calendar Management
+                h2 Create Course !{event.summary} &mdash; !{event.acronym}
+                hr
+
+        div.container
+            br
+            br
+            form.form-inline(action="/course", method="POST")
+                input(type="hidden", name="apogee", value= apogee )
+                input(type="hidden", name="title", value= title )
+                - i = 1; 
+                    -var session = "Session "+ i
+                    -var sessionID = "session"+ i
+                    div(id=sessionID)
+                        +session(session,i)
+                        -var attributes=({'onclick':'addEntryCourse('+i+')'})
+                        input(type="button", value="Add Session")&attributes(attributes)
+
+                    
+                input.btn.btn-default(type="submit", value="Create")
+
+        // Datepickr from https://github.com/joshsalverda/datepickr
+        script(src="/javascripts/datepickr.min.js")
+        script(type='text/javascript').
+            // Overwrite the global datepickr prototype
+            // Won't affect previously created datepickrs, but will affect any new ones
+            datepickr.init.prototype.l10n.months.longhand = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+            datepickr.init.prototype.l10n.weekdays.shorthand = ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'];
+
+            // Custom date format
+            datepickr('.datepickr',{ dateFormat: 'Y-m-d'});
+
+

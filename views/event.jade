@@ -1,0 +1,61 @@
+extends layout
+
+block content
+        
+
+        div.splash
+            div.container
+                h1 Calendar Management
+                h2 Create new Event
+                hr
+
+        div.container
+            br
+            br
+            ul
+                li 
+                    label.first Title
+                    input.form-control#title(type="text")
+                li 
+                    label.first Lecturer
+                    input.form-control#lecturer(type="text")
+                li 
+                    label.first Description
+                    textarea.form-control#description
+
+            div.col-lg-12 
+                    div.form-group.col-lg-4
+                        label.first Date
+                        input.datepickr(placeholder="yyyy-mm-dd")
+
+                    div.form-group.col-lg-4
+                        label.first From 
+                        select.contents#starthh(name="starthh")
+                            each hour, i in settings.hours
+                                option(value=hour ) #{hour}
+                        label :
+                        select.contents#startmm(name="startmm")
+                            each mins, i in settings.minutes
+                                option(value=mins ) #{mins}
+                    div.form-group.col-lg-4
+                        label To 
+                        select.contents#endhh(name="endhh")
+                            each hour, i in settings.hours
+                                option(value=hour ) #{hour}
+                        label :
+                        select.contents#endmm(name="endmm")
+                            each mins, i in settings.minutes
+                                option(value=mins ) #{mins}
+
+
+        // Datepickr from https://github.com/joshsalverda/datepickr
+        script(src="/javascripts/datepickr.min.js")
+        script(type='text/javascript').
+            // Overwrite the global datepickr prototype
+            // Won't affect previously created datepickrs, but will affect any new ones
+            datepickr.init.prototype.l10n.months.longhand = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+            datepickr.init.prototype.l10n.weekdays.shorthand = ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'];
+
+            // Custom date format
+            datepickr('.datepickr',{ dateFormat: 'Y-m-d'});
+

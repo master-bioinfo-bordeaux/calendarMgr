@@ -1,0 +1,12 @@
+# Config file
+#################
+settings.json
+
+
+# gedit tmp files
+#################
+*.*~
+
+# node_modules directory
+#################
+node_modules/*

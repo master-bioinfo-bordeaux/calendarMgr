@@ -1,0 +1,19 @@
+extends layout
+ 
+block content
+    h1= title
+    form.form-horizontal.col-md-offset-1.col-md-6(name="settings", method="post")
+        div.form-group
+            label ID
+            input.form-control(type="text", name="id")
+        div.form-group
+            label Secret
+            input.form-control(type="text", name="secret")
+        div.form-group
+            label Year
+            select.form-control(name="default_year")
+                option(value="1") 1
+                option(value="2") 2
+        div.form-group
+            div.col-sm-offset-2.col-sm-10
+                input.btn.btn-default(type="submit", value="Save")
