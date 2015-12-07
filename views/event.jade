@@ -1,13 +1,12 @@
 extends layout
 
 block content
-        
 
         div.splash
             div.container
                 h1 Calendar Management
-                h2 Create new Event
-                hr
+                h2 Creation
+                h2 !{event.summary} &mdash; !{event.acronym}
 
         div.container
             br
@@ -17,7 +16,9 @@ block content
                     label.first Title
                     input.form-control#title(type="text")
                 li 
-                    label.first Lecturer
+                    label.first Lecturer (Dr. Name Initials)
+                    input.form-control#lecturer(type="text")
+                    input.form-control#lecturer(type="text")
                     input.form-control#lecturer(type="text")
                 li 
                     label.first Description

@@ -18,7 +18,7 @@ function addSemesterCourse() {
 }
 
 function addEntryCourse(index) {
-    console.log(index);
+    console.log(index+' ['+last_session+']');
     var current = "session"+ index;
     var next    = "session"+(index+1);
     var element = document.getElementById(next);

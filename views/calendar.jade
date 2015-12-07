@@ -12,7 +12,7 @@ mixin cell(ev)
             li 
                 b=ev.hours
             li=ev.comment
-            li=ev.lecturer
+            li!=ev.lecturer
             -var campus = ev.location.match(/(.+)::/)[1];
             -var building = ev.location.match(/::(.+)@/)[1];
             -var room = ev.location.match(/@(.+)/)[1];
@@ -38,6 +38,7 @@ block content
     div.splash
         div.container
             h1 Calendar Management
+            h2 Overview
             hr
 
     div.container
@@ -59,23 +60,24 @@ block content
                 ul(style="padding-left:10px;")
                     each event in events[1]
                         +cell(event)
-                    br
-                    div.alert.alert-info(role="alert") 
-                        button.close( type="button", data-dismiss="alert", aria-label="Close")
-                            span(aria-hidden="true")&times;
-                        !No Event/Course chosen!!
 
                     li(id="new").calCourse 
                         div.calTitle
-                            a New 
+                            a New Course/Event
                         ul.calContent
+                            div.alert.alert-info(role="alert") 
+                                button.close( type="button", data-dismiss="alert", aria-label="Close")
+                                    span(aria-hidden="true")&times;
+                                !No Event/Course chosen!!
+                            br
+
                             form(action="/calendar", method="POST")
                                 li 
-                                    b Course/Event:
                                     select#sem(name="sem", onchange="addSemesterCourse()")
                                         each sem, i in settings.semesters
                                             option(value=i+6) #{sem}
-                                li Title:
+                                br
+                                li
                                     select#S6(name="S6")
                                         each course, i in menus.s06
                                             option(value='#{course.apogee}' ) #{course.name}

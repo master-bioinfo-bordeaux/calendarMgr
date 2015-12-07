@@ -130,6 +130,9 @@ function updateCalendarData(y,m,d) {
                     if (element.lecturer === "------") {
                         element.warnings.push(" No lecturer!!");
                     }
+                    if (element.location.search('None::None@') != -1) {
+                        element.warnings.push(" No address!!");
+                    }
                     if (element.location.search('@000') != -1) {
                         element.warnings.push(" No classroom!!");
                     }
@@ -308,51 +311,48 @@ router.post('/calendar', function(req, res, next) {
     console.log('POST '+ JSON.stringify(req.body) );
     var answer = JSON.stringify(req.body);
     
-    if (req.body.sem == 11) { // Event
-        res.render('event');
+
+    var apogee = '';
+    var title = 'unknown';
+    switch (req.body.sem) {
+    case '7':
+        apogee = req.body.S7; 
+        title = getTitle(apogee,calmgr.courses);
+        break;
+    case '8':
+        apogee = req.body.S8;
+        title = getTitle(apogee,calmgr.courses);
+        break;
+    case '9':
+        apogee = req.body.S9;
+        title = getTitle(apogee,calmgr.courses);
+        break;
+    case '10':
+        apogee = req.body.S10; 
+        title = getTitle(apogee,calmgr.courses);
+        break;
+    case '11':
+        apogee = "New"; 
+        title = "Event";
+        break;
     }
-    else {
-        var apogee = '';
-        var title = 'unknown';
-        switch (req.body.sem) {
-        case '7':
-            apogee = req.body.S7; 
-            title = getTitle(apogee,calmgr.courses);
-            break;
-        case '8':
-            apogee = req.body.S8;
-            title = getTitle(apogee,calmgr.courses);
-            break;
-        case '9':
-            apogee = req.body.S9;
-            title = getTitle(apogee,calmgr.courses);
-            break;
-        case '10':
-            apogee = req.body.S10; 
-            title = getTitle(apogee,calmgr.courses);
-            break;
-        case '11':
-            apogee = "New"; 
-            title = "Event";
-            break;
-        }
-        console.log(apogee);
-        // 1- Get course sessions if available
-        // 2- Render page with sessions history 
-        // console.log('calmgr ' + JSON.stringify(calmgr));
-        var new_event = {
-            'acronym' : title,
-            'summary': apogee
-        }
-        if (apogee === "New") {
-            res.render('event', {'event' : new_event, 'settings': calmgr});
-        }
-        else if (apogee !== '') {
-            res.render('course', {'event' : new_event, 'settings': calmgr});
-        }
-        // No course or event chosen. An alert could be sent TODO
-        res.redirect('/calendar');
+    console.log(apogee);
+    // 1- Get course sessions if available
+    // 2- Render page with sessions history 
+    // console.log('calmgr ' + JSON.stringify(calmgr));
+    var new_event = {
+        'acronym' : title,
+        'summary': apogee
     }
+    if (apogee === "New") {
+        res.render('event', {'event' : new_event, 'settings': calmgr} );
+    }
+    else if (apogee !== '') {
+        res.render('course', {'event' : new_event, 'settings': calmgr});
+    }
+    // No course or event chosen. An alert could be sent TODO
+    res.redirect('/calendar');
+
     
     function getTitle(entry,list) {
         var title='unknown';
@@ -373,18 +373,21 @@ router.post('/calendar', function(req, res, next) {
 
 
 router.post('/course', function(req, res, next) {
-    // console.log('POST course'+ JSON.stringify(req.body) );
+    console.log('POST course'+ JSON.stringify(req.body) );
     var e = createEvent(req.body);
     calendar.data[e.ID] = e;
     console.log(JSON.stringify(calendar.data));
     var ghrepo = me.client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
     console.log('REPO ' + ghrepo);
     console.log('SHA ' + calendar.data.sha);
-    ghrepo.updateContents('data/calendar.json', 'New Event', JSON.stringify(calendar.data,null,2), calendar.sha,function (err, token) {
+    ghrepo.updateContents('data/calendar.json', 'New course session', JSON.stringify(calendar.data,null,2), calendar.sha,function (err, token) {
         console.log('ERR '+err);
         console.log('TOK '+token);
     });
 
+    res.redirect("/calendar");
+    
+    
     function createEvent(data) {
         var event = {};
         var sem = data.title.substr(0,2) === "S07";
@@ -392,13 +395,13 @@ router.post('/course', function(req, res, next) {
         var tracks = "F"; // Common course must be set correctly. 
         event.ID = "C"+ master_year + tracks + new Date().toISOString().replace(/[-:.Z]/g,'') + "@" + me.login; 
         event.summary    = data.apogee;
-        event.date_start = data.date1.replace(/-/g,'') + "T" + data.starthh1 + data.startmm1;
-        event.date_end   = data.date1.replace(/-/g,'') + "T" + data.endhh1   + data.endmm1;
+        event.date_start = data.date1 + "T" + data.starthh1 + ':' + data.startmm1;
+        event.date_end   = data.date1 + "T" + data.endhh1   + ':' + data.endmm1;
         event.group      = data.group1;
         event.lecturer   = data.lecturer1;
         event.location   = data.location1 + "@" + data.room1;
         event.description = "None";
-        event.comment    = data.title; // Remove semester ???
+        event.comment    = data.type1; 
         console.log('EVENT ' + JSON.stringify(event));
         
         return event;

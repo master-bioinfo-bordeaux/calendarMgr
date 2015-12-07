@@ -48,10 +48,10 @@
     "19"
   ], 
   "locations": [
-    "None", 
+    "None::None", 
     "Talence::A21-OMEGA", 
     "Talence::A29-CREMI", 
-    "Talence::A30-LaBRI", 
+    "Talence::A30-LaBRI",
     "Talence::B5", 
     "Carreire::Amphi", 
     "Carreire::ED"
@@ -89,10 +89,10 @@
     "Domenger JP", 
     "Garenne A", 
     "Hernould M", 
-    "Noguès X", 
+    "Nogu&egrave;s X", 
     "Pinaud B", 
     "Taveau JC", 
-    "Thébault P", 
+    "Th&eacute;bault P", 
     "Uricaru R"
   ], 
   "courses" : {
@@ -188,7 +188,7 @@
     }, 
     "F1BS9201": {
       "apogee": "F1BS9201", 
-      "acronym": "S09::CommPR&D",
+      "acronym": "S09::CPR&D",
       "track": "F"
     }, 
     "F6BS9202": {
