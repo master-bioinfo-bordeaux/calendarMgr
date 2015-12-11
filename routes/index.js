@@ -255,28 +255,43 @@ router.get('/nextweek', function(req, res, next) {
 });
 
 router.get('/calendar', function(req, res, next) {
+/******
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+            calendar_data = JSON.parse(xhr.responseText); // Données textuelles récupérées
+            processCalendarData();
+        }
+    };
+    xhr.open("GET", "http://master-bioinfo-bordeaux.github.io/data/calendar.json", true);
+    xhr.send(null);
+****/
+
     me.client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io').contents('data/calendar.json', function(err, data, headers) {
         // console.log("error: " + err);
         // console.log("data: " +  JSON.stringify(data) );
         // console.log("headers:" + headers);
         calendar.data = JSON.parse(atob(data.content) );
         calendar.sha = data.sha;
+
+        // console.log(JSON.stringify(calendar.data) );
+        var now = new Date();
+        calendar.date = now;
+        updateCalendarData(now.getFullYear(), now.getMonth(), now.getDate());
+        calmgr.menus = createMenus();
+        res.render('calendar', 
+            {
+                'days': calendar.weekdays, 
+                'weeknum': calendar.weeknum, 
+                'events': calendar.events,
+                'year': settings.default_year,
+                'settings' : calmgr, 
+                'menus': calmgr.menus
+            }
+        );
+    
     });
-    // console.log(JSON.stringify(calendar.data) );
-    var now = new Date();
-    calendar.date = now;
-    updateCalendarData(now.getFullYear(), now.getMonth(), now.getDate());
-    calmgr.menus = createMenus();
-    res.render('calendar', 
-        {
-            'days': calendar.weekdays, 
-            'weeknum': calendar.weeknum, 
-            'events': calendar.events,
-            'year': settings.default_year,
-            'settings' : calmgr, 
-            'menus': calmgr.menus
-        }
-    );
     
     function createMenus() {
         var menus = {};
@@ -380,13 +395,21 @@ router.post('/course', function(req, res, next) {
     var ghrepo = me.client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
     console.log('REPO ' + ghrepo);
     console.log('SHA ' + calendar.data.sha);
-    ghrepo.updateContents('data/calendar.json', 'New course session', JSON.stringify(calendar.data,null,2), calendar.sha,function (err, token) {
-        console.log('ERR '+err);
-        console.log('TOK '+token);
-    });
+    ghrepo.updateContents(
+        'data/calendar.json', 
+        'New course session', 
+        unescape(encodeURIComponent(JSON.stringify(calendar.data,null,2))), 
+        calendar.sha,
+        function (err, token) {
+            console.log('ERR '+err);
+            console.log('TOK '+token);
+            if (err === null) {
+                res.redirect("/calendar");
+            }
+        }
+    );
 
-    res.redirect("/calendar");
-    
+
     
     function createEvent(data) {
         var event = {};
@@ -408,18 +431,46 @@ router.post('/course', function(req, res, next) {
     }
 });
 
+
 router.get('/event', function(req, res, next) {
-    var calendar = {};
-    client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io').contents('data/calendar.json', function(err, data, headers) {
-        console.log("error: " + err);
-        console.log("data: " +  data);
-        console.log("headers:" + headers);
-        calendar.data = JSON.parse(atob(data.content) );
-    });
-    console.log("CONTENTS >>>>>>>>>>>>>>>>>><" );
-    // console.log(JSON.parse(contents) );
-    res.render('event', {'year': settings.default_year,'data' : calendar.data});
+    res.render('event', {'year': settings.default_year,'setting' : calmgr});
 });
+
+router.post('/event', function(req, res, next) {
+    console.log('POST event '+ JSON.stringify(req.body) );
+    var data = req.body;
+    var event = {};
+    var tracks = data.track.reduce(
+        function add(a, b) {
+            return parseInt(a) + parseInt(b);
+        }
+    ); 
+    event.ID = "E"+ data.year + tracks.toString(16) + new Date().toISOString().replace(/[-:.Z]/g,'') + "@" + me.login; 
+    event.summary    = "Event";
+    event.title      = data.title;
+    event.lecturer   = data.status + ' ' + data.name + ' '+ data.initials;
+    event.year       = data.year;
+    event.date_start = data.date + "T" + data.starthh + ':' + data.startmm;
+    event.date_end   = data.date + "T" + data.endhh   + ':' + data.endmm;
+    event.group      = data.group;
+    event.location   = data.location + "@" + data.room;
+    event.description = data.description;
+    event.comment    = data.type; 
+    event.tracks     = '0x'+tracks.toString(16); 
+    console.log('EVENT ' + JSON.stringify(event));
+
+    calendar.data[event.ID] = event;
+    var ghrepo = me.client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
+    ghrepo.updateContents('data/calendar.json', 'New event', unescape(encodeURIComponent(JSON.stringify(calendar.data,null,2))), calendar.sha,function (err, token) {
+        console.log('ERR '+err);
+        console.log('TOK '+token);
+        if (err === null) {
+            res.redirect("/calendar");
+        }
+
+    });
+});
+
 
 router.get('/modify', function(req, res, next) {
     var id= req.query.id;
@@ -429,11 +480,65 @@ router.get('/modify', function(req, res, next) {
     calendar.data[id].locationBuilding = answer[1];
     answer = calendar.data[id].location.match(/@(\d+)/);
     calendar.data[id].locationRoom = answer[1];
-    calendar.data[id]
+
     console.log(JSON.stringify(calendar.data[id]));
-    res.render('course_modify', {'event' : calendar.data[id], 'settings': calmgr});
+    if (id[0]=== "C") {
+        res.render('course_modify', {'event' : calendar.data[id], 'settings': calmgr});
+    }
+    else if (id[0]=== "E") {
+        res.render('event_modify', {'event' : calendar.data[id], 'settings': calmgr});
+    }
+
 
 });
+
+router.post('/modify', function(req, res, next) {
+    console.log('POST modify '+ JSON.stringify(req.body) );
+    var data = req.body;
+    var event = calendar.data[data.ID];
+    if (data.ID[0] === "C") {
+        event.summary    = data.apogee;
+        event.title      = data.title;
+        event.lecturer   = data.lecturer;
+        event.date_start = data.date + "T" + data.starthh + ':' + data.startmm;
+        event.date_end   = data.date + "T" + data.endhh   + ':' + data.endmm;
+        event.group      = data.group;
+        event.location   = data.location + "@" + data.room;
+        event.comment    = data.type; 
+    }
+    else if (data.ID[0] === "E") {
+        var tracks = data.track.reduce(
+            function add(a, b) {
+                return parseInt(a) + parseInt(b);
+            }
+        ); 
+
+        event.summary    = calmgr.courses[data.type].apogee;
+        event.title      = data.title;
+        event.lecturer   = data.status + ' ' + data.name + ' '+ data.initials;
+        event.year       = data.year;
+        event.date_start = data.date + "T" + data.starthh + ':' + data.startmm;
+        event.date_end   = data.date + "T" + data.endhh   + ':' + data.endmm;
+        event.group      = data.group;
+        event.location   = data.location + "@" + data.room;
+        event.description = data.description;
+        event.comment    = data.type; 
+        event.tracks     = '0x'+tracks.toString(16); 
+
+    }
+    
+    var ghrepo = me.client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
+    ghrepo.updateContents('data/calendar.json', 'New event', unescape(encodeURIComponent(JSON.stringify(calendar.data,null,2))), calendar.sha,function (err, token) {
+        console.log('ERR '+err);
+        console.log('TOK '+token);
+        if (err === null) {
+            res.redirect("/calendar");
+        }
+
+    });
+
+});
+
 
 router.get('/delete', function(req, res, next) {
     console.log('delete GET '+ req.id );
