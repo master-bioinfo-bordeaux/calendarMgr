@@ -465,6 +465,7 @@ router.post('/course', function(req, res, next) {
         event.ID = "C"+ master_year + tracks + new Date().toISOString().replace(/[-:.Z]/g,'') + "@" + me.login; 
         event.apogee     = data.apogee;
         event.acronym    = data.acronym;
+        event.type       = data.type;
         event.summary    = data.apogee;
         event.date_start = data.date + "T" + data.starthh + ':' + data.startmm;
         event.date_end   = data.date + "T" + data.endhh   + ':' + data.endmm;
