@@ -125,7 +125,7 @@ function updateCalendarData(y,m,d) {
                 console.log(dayD,startDateD,endDateD,calendar.date.getDate(),today.getDay(),day, day.toLocaleString());
                 if ( dayD >= startDateD && dayD <= endDateD ) { // HACK: What about multi-days event ?
                     console.log(day + ' creates an event with ' + element.ID + ' ' +  element.summary);
-                    element.title = calmgr.courses[element.summary].acronym;
+                    element.acronym = calmgr.courses[element.summary].acronym;
                     element.warnings = [];
                     if (element.lecturer === "------") {
                         element.warnings.push(" No lecturer!!");
@@ -363,6 +363,12 @@ router.post('/calendar', function(req, res, next) {
         res.render('event', {'event' : new_event, 'settings': calmgr} );
     }
     else if (apogee !== '') {
+        // Add session props
+        new_event.apogee = apogee;
+        new_event.sessions = [];
+        new_event.sessions[0] = {};
+        new_event.session = 1;
+
         res.render('course', {'event' : new_event, 'settings': calmgr});
     }
     // No course or event chosen. An alert could be sent TODO
@@ -386,7 +392,94 @@ router.post('/calendar', function(req, res, next) {
     
 });
 
+router.post('/course', function(req, res, next) {
+    console.log('POST course'+ JSON.stringify(req.body) );
+    if (req.body.action === "Add Session") {
+        // Upodate event object
+        var new_session = parseInt(req.body.session);
+        new_session++;
+        var mod_event = createEventWithSessions(req.body);
+        mod_event.session = new_session;
+        
+        // Copy from the data of the previous session except date
+        mod_event.sessions[new_session - 1] = Object.create(mod_event.sessions[new_session - 2]);
+        mod_event.sessions[new_session - 1].date = "";
+        console.log(JSON.stringify(mod_event));
+        res.render('course', {'event' : mod_event, 'settings': calmgr});
+    }
+    else if (req.body.action === "Create") {
+        var events = createEventWithSessions(req.body);
+        for (var i in events.sessions) {
+            events.sessions[i].apogee = events.apogee;
+            events.sessions[i].acronym = events.acronym;
+            console.log(events.sessions[i]);
+            var e = createEvent(events.sessions[i]);
+            // Add in the calendar
+            calendar.data[e.ID] = e;
+            console.log(JSON.stringify(calendar.data));
+        }
+        // Update github data/calendar.json
+        var ghrepo = me.client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
+        console.log('REPO ' + ghrepo);
+        console.log('SHA ' + calendar.sha);
+        ghrepo.updateContents('data/calendar.json', 'New Event', JSON.stringify(calendar.data,null,2), calendar.sha,function (err, token) {
+            console.log('ERR '+err);
+            console.log('TOK '+token);
+            if (err === null) {
+                res.redirect("/calendar");
+            }
+        });
+    }
 
+    function createEventWithSessions(data) {
+        var mod_event = {
+            'acronym' : data.acronym,
+            'apogee'  : data.apogee,
+            "sessions": [],
+            'session' : data.session
+        }
+        var keys = Object.keys(data).sort();
+        // Init
+        for (var i = 0; i < mod_event.session; i++) {
+            mod_event.sessions[i]= {};
+        }
+        // Fill in session(s)
+        var keynames = ["type","lecturer","students","date","starthh","startmm","endhh","endmm","location","room"];
+        for (var i=0; i < keys.length; i++) {
+            for (var j=0; j < keynames.length; j++) {
+                if (keys[i].indexOf(keynames[j]) != -1) {
+                    // Get index
+                    var index = parseInt(keys[i].replace(/\D/g, '') );
+                    mod_event.sessions[index][keynames[j]] = data[keys[i]];
+                }
+            }
+        }
+        return mod_event;
+    }
+    
+    function createEvent(data) {
+        var event = {};
+        var sem = data.acronym.substr(0,2) === "S07";
+        var master_year = (data.acronym.substr(0,2) === "S07" || data.acronym.substr(0,2) === "S08" ) ? 1 : 2;
+        var tracks = "F"; // Common course must be set correctly or read from courses JSON description 
+        event.ID = "C"+ master_year + tracks + new Date().toISOString().replace(/[-:.Z]/g,'') + "@" + me.login; 
+        event.apogee     = data.apogee;
+        event.acronym    = data.acronym;
+        event.summary    = data.apogee;
+        event.date_start = data.date + "T" + data.starthh + ':' + data.startmm;
+        event.date_end   = data.date + "T" + data.endhh   + ':' + data.endmm;
+        event.group      = data.group;
+        event.lecturer   = data.lecturer;
+        event.location   = data.location + "@" + data.room;
+        event.description = "None";
+        event.comment    = data.title; // Remove semester ???
+        console.log('COURSE ' + JSON.stringify(event));
+        
+        return event;
+    }
+});
+
+/***
 router.post('/course', function(req, res, next) {
     console.log('POST course'+ JSON.stringify(req.body) );
     var e = createEvent(req.body);
@@ -430,7 +523,7 @@ router.post('/course', function(req, res, next) {
         return event;
     }
 });
-
+***/
 
 router.get('/event', function(req, res, next) {
     res.render('event', {'year': settings.default_year,'setting' : calmgr});
@@ -440,13 +533,12 @@ router.post('/event', function(req, res, next) {
     console.log('POST event '+ JSON.stringify(req.body) );
     var data = req.body;
     var event = {};
-    var tracks = data.track.reduce(
-        function add(a, b) {
-            return parseInt(a) + parseInt(b);
-        }
-    ); 
+    var tracks = parseInt(data.track0) + parseInt(data.track1) + parseInt(data.track2);
+ 
     event.ID = "E"+ data.year + tracks.toString(16) + new Date().toISOString().replace(/[-:.Z]/g,'') + "@" + me.login; 
-    event.summary    = "Event";
+    event.apogee     = calmgr.events[data.type].apogee;
+    event.acronym    = data.type; 
+    event.summary    = event.apogee;
     event.title      = data.title;
     event.lecturer   = data.status + ' ' + data.name + ' '+ data.initials;
     event.year       = data.year;
@@ -455,7 +547,6 @@ router.post('/event', function(req, res, next) {
     event.group      = data.group;
     event.location   = data.location + "@" + data.room;
     event.description = data.description;
-    event.comment    = data.type; 
     event.tracks     = '0x'+tracks.toString(16); 
     console.log('EVENT ' + JSON.stringify(event));
 
@@ -476,6 +567,14 @@ router.get('/modify', function(req, res, next) {
     var id= req.query.id;
     console.log('GET ID ' + id) + ' ' + JSON.stringify(calendar.data[id]);
     calendar.data[id].acronym = calmgr.courses[calendar.data[id].summary].acronym;
+    
+    // TODO: Must be improved!!!
+    // var myEvent = Object.create(calendar.data[id]);
+    // Add info about building and room
+    // var tmp = myEvent.location.match(/(.+)@/);
+    // myEvent.locationBuilding = tmp[1];
+    // tmp = myEvent.location.match(/@(\d+)/);
+    // myEvent.room = tmp[1];
     var answer = calendar.data[id].location.match(/(.+)@/);
     calendar.data[id].locationBuilding = answer[1];
     answer = calendar.data[id].location.match(/@(\d+)/);
@@ -495,7 +594,8 @@ router.get('/modify', function(req, res, next) {
 router.post('/modify', function(req, res, next) {
     console.log('POST modify '+ JSON.stringify(req.body) );
     var data = req.body;
-    var event = calendar.data[data.ID];
+    var event = {};
+    event.ID = data.ID;
     if (data.ID[0] === "C") {
         event.summary    = data.apogee;
         event.title      = data.title;
@@ -507,13 +607,11 @@ router.post('/modify', function(req, res, next) {
         event.comment    = data.type; 
     }
     else if (data.ID[0] === "E") {
-        var tracks = data.track.reduce(
-            function add(a, b) {
-                return parseInt(a) + parseInt(b);
-            }
-        ); 
-
-        event.summary    = calmgr.courses[data.type].apogee;
+        var tracks = parseInt(data.track0) + parseInt(data.track1) + parseInt(data.track2);
+        console.log('TRACKS ' + tracks);
+        event.apogee     = calmgr.events[data.type].apogee;
+        event.acronym    = data.type; 
+        event.summary    = event.apogee;
         event.title      = data.title;
         event.lecturer   = data.status + ' ' + data.name + ' '+ data.initials;
         event.year       = data.year;
@@ -522,11 +620,10 @@ router.post('/modify', function(req, res, next) {
         event.group      = data.group;
         event.location   = data.location + "@" + data.room;
         event.description = data.description;
-        event.comment    = data.type; 
         event.tracks     = '0x'+tracks.toString(16); 
 
     }
-    
+    calendar.data[data.ID] = event;
     var ghrepo = me.client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
     ghrepo.updateContents('data/calendar.json', 'New event', unescape(encodeURIComponent(JSON.stringify(calendar.data,null,2))), calendar.sha,function (err, token) {
         console.log('ERR '+err);
@@ -541,7 +638,17 @@ router.post('/modify', function(req, res, next) {
 
 
 router.get('/delete', function(req, res, next) {
-    console.log('delete GET '+ req.id );
+    console.log('delete GET '+ req.query.id );
+    delete calendar.data[req.query.id];
+    var ghrepo = me.client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
+    ghrepo.updateContents('data/calendar.json', 'Delete event', unescape(encodeURIComponent(JSON.stringify(calendar.data,null,2))), calendar.sha,function (err, token) {
+        console.log('ERR '+err);
+        console.log('TOK '+token);
+        if (err === null) {
+            res.redirect("/calendar");
+        }
+
+    });
 });
 
 

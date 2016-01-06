@@ -11,43 +11,134 @@ block content
         div.container
             br
             br
-            ul
-                li 
-                    label.first Title
-                    input.form-control#title(type="text")
-                li 
-                    label.first Lecturer (Dr. Name Initials)
-                    input.form-control#lecturer(type="text")
-                    input.form-control#lecturer(type="text")
-                    input.form-control#lecturer(type="text")
-                li 
-                    label.first Description
-                    textarea.form-control#description
+            form(action="/event", method="POST")
+                div.row.col-lg-11
+                    div.col-lg-1 
+                        label Type
+                    div.col-lg-2 
+                        select.form-control(name="type")
+                            each typ, i in settings.types
+                                option(value=typ ) #{typ}
+                    div.col-lg-1 
+                        label Title
+                    div.col-lg-7
+                        input.form-control#title(type="text",name="title")
 
-            div.col-lg-12 
-                    div.form-group.col-lg-4
-                        label.first Date
-                        input.datepickr(placeholder="yyyy-mm-dd")
+                div.row.col-lg-11
+                    br 
+                    div.col-lg-1 
+                        label Lecturer
+                    div.col-lg-2
+                        select.form-control(name="status")
+                            option(value="--") None
+                            option(value="Mr") Mr
+                            option(value="Ms") Ms
+                            option(value="Dr") Dr
+                            option(value="Pr") Pr
+                    div.col-lg-6 
+                        input.form-control(type="text",name="name",placeholder="Name")
+                    div.col-lg-2 
+                        input.form-control(type="text",name="initials",placeholder="Initials")
+                div.row.col-lg-10
+                    br 
+                    div.col-lg-1 
+                        label Content
+                    div.col-lg-9
+                        textarea.form-control#description(name="description")
 
-                    div.form-group.col-lg-4
-                        label.first From 
+                div.row.col-lg-11
+                    br 
+                    div.col-lg-1 
+                        label Students
+                    div.col-lg-2 
+                        select.form-control(name="year")
+                            option(value="0") None
+                            option(value="1") M1
+                            option(value="2") M2
+                            option(value="3") M1+M2
+                    div.col-lg-8.btn-toolbar
+                        label.pull-left(style="width:130px") Track [required]:&nbsp;
+                        label.btn.btn-danger
+                            input(type="radio",name="track0",value="1") 
+                            !="C++Bio"
+                        label.btn.btn-danger
+                            input(type="radio",name="track1",value="2") 
+                            !="GenOrg"
+                        label.btn.btn-danger
+                            input(type="radio",name="track2",value="4") 
+                            !="OrgEco"
+
+                div.row.col-lg-11
+                    br
+
+                    div.col-lg-1 
+                        label Group
+                    div.col-lg-2 
+                        select.form-control(name="group")
+                            each grp, i in settings.students
+                                option(value=grp ) #{grp}
+                    div.col-lg-8.btn-toolbar
+                        label.pull-left(style="width:130px") Track [elective]:&nbsp;
+                        label.btn.btn-success
+                            input(type="radio",name="track0",value="16") 
+                            !="C++Bio"
+                        label.btn.btn-success
+                            input(type="radio",name="track1",value="32") 
+                            !="GenOrg"
+                        label.btn.btn-success
+                            input(type="radio",name="track2",value="64") 
+                            !="OrgEco"
+
+
+                div.row.col-lg-11
+                    br  
+                    div.col-lg-1
+                        label Date
+                    div.col-lg-2
+                        input.form-control.datepickr(type="text",name="date",placeholder="yyyy-mm-dd")
+                    div.col-lg-1
+                        label From 
+                    div.form-group.col-lg-3
                         select.contents#starthh(name="starthh")
                             each hour, i in settings.hours
                                 option(value=hour ) #{hour}
-                        label :
+                        label &nbsp;:&nbsp;
                         select.contents#startmm(name="startmm")
                             each mins, i in settings.minutes
                                 option(value=mins ) #{mins}
-                    div.form-group.col-lg-4
+                    div.col-lg-1
                         label To 
+                    div.form-group.col-lg-3
                         select.contents#endhh(name="endhh")
                             each hour, i in settings.hours
                                 option(value=hour ) #{hour}
-                        label :
+                        label &nbsp;:&nbsp;
                         select.contents#endmm(name="endmm")
                             each mins, i in settings.minutes
                                 option(value=mins ) #{mins}
+                div.row.col-lg-10
+                    br 
+                    div.col-lg-1 
+                        label Location
+                    div.form-group.col-lg-3
+                        select.form-control.contents#location(name="location" )
+                            each loc, i in settings.locations
+                                option(value=loc)= loc
+                    div.col-lg-2 
+                        label Room / Amphi
+                    div.form-group.col-lg-4
+                        input.contents#room(name="room", placeholder="000", value=event.locationRoom )
 
+                br
+                br
+                div.row.col-lg-4
+                    a.btn.btn-default(href="/calendar") Cancel
+                    &nbsp;
+                    input.btn.btn-default(type="submit", value="Create")
+        br
+        br
+        br
+        br
 
         // Datepickr from https://github.com/joshsalverda/datepickr
         script(src="/javascripts/datepickr.min.js")

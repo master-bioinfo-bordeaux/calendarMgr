@@ -6,67 +6,61 @@ mixin select-option(val, name)
 
 mixin session(title,num)
     div.col-lg-12 
-        h3= title
-        
-    div.row
-        br
-        div.form-group.col-lg-4
-            label.control-label Type: 
-            select.contents#type(name='type'+ num)
-                each typ, i in settings.types
-                    +select-option(event.comment, typ)
 
-        div.form-group.col-lg-4
-            label.control-label Lecturer: 
-            select#lecturer(name="lecturer"+ num )
-                optgroup
-                    each one, i in settings.people
-                        +select-option(event.lecturer, one)
-                optgroup
-                    option(value="Multimedia") Multimedia
+        h2= title
+        div.col-lg-6
+            div.form-group
+                label.first Type
+                select.form-control#type(name='type'+ num)
+                    each typ, i in settings.types
+                        +select-option(event.sessions[num].type, typ)
+        div.col-lg-6
+            div.form-group
+                label.control-label Lecturer
+                select.form-control#lecturer(name="lecturer"+ num )
+                    optgroup
+                        each one, i in settings.people
+                            +select-option(event.sessions[num].lecturer, one)
+                    optgroup
+                        option(value="Multimedia") Multimedia
+        div.col-lg-6
+            div.form-group
+                label.first Students
+                select.form-control#students(name="students"+ num )
+                    each group, i in settings.students
+                        +select-option(event.sessions[num].students, group)
+            
+        div.col-lg-6
 
-        div.form-group.col-lg-4
-            label.control-label Students: 
-            select.contents#students(name="students"+ num )
-                each group, i in settings.students
-                    option(value='#{group}' ) #{group}
+            div.form-group
+                label.first Date
+                input.form-control.datepickr(name="date" + num,placeholder="yyyy-mm-dd",value=event.sessions[num].date)
 
-    div.row
-        br
-        div.form-group.col-lg-4
-            label Date
-            input.datepickr(name="date"+ num, placeholder="yyyy-mm-dd")
+                div.form-group
+                    label.first From 
+                    select.contents#starthh(name="starthh"+ num )
+                        each hour, i in settings.hours
+                            +select-option(event.sessions[num].starthh, hour)
+                    label :
+                    select.contents#startmm(name="startmm"+ num )
+                        each mins, i in settings.minutes
+                            +select-option(event.sessions[num].startmm, mins)
+                    label To 
+                    select.contents#endhh(name="endhh"+ num )
+                        each hour, i in settings.hours
+                            +select-option(event.sessions[num].endhh, hour)
+                    label :
+                    select.contents#endmm(name="endmm"+ num )
+                        each mins, i in settings.minutes
+                            +select-option(event.sessions[num].endmm, mins)
 
-        div.form-group.col-lg-2
-            label From&nbsp;&nbsp; 
-            select.contents#starthh(name="starthh"+ num )
-                each hour, i in settings.hours
-                    option(value=hour ) #{hour}
-            label :
-            select.contents#startmm(name="startmm"+ num )
-                each mins, i in settings.minutes
-                    option(value=mins ) #{mins}
-        div.form-group.col-lg-6
-            label.control-label To&nbsp;&nbsp;
-            select.contents#endhh(name="endhh"+ num )
-                each hour, i in settings.hours
-                    option(value=hour ) #{hour}
-            label :
-            select.contents#endmm(name="endmm"+ num )
-                each mins, i in settings.minutes
-                    option(value=mins ) #{mins}
-
-    div.row
-        br
-        div.form-group.col-lg-4
-            label Location
-            select.contents#location(name="location"+ num )
-                each loc, i in settings.locations
-                    +select-option(event.locationBuilding, loc)
-        div.form-group.col-lg-4
-            label Room/Amphi
-            input.contents#room(name="room"+ num, value=event.locationRoom,placeholder="000" )
-
+            div.form-group
+                label.first Location
+                select.form-control.contents#location(name="location"+ num )
+                    each loc, i in settings.locations
+                        +select-option(event.sessions[num].location, loc)
+               label.first Room/Amphi
+                input.contents#room(name="room"+ num, value=event.sessions[num].room,placeholder="000" )
 
 
 extends layout
@@ -76,27 +70,31 @@ block content
         div.splash
             div.container
                 h1 Calendar Management
-                h2 Creation
-                h2 Course !{event.summary} &mdash; !{event.acronym}
+                h2 Create Course: !{event.apogee} &mdash; !{event.acronym}
                 hr
 
         div.container
             br
             br
+
             form.form-inline(action="/course", method="POST")
-                input(type="hidden", name="apogee", value= event.summary )
-                input(type="hidden", name="title" , value= event.acronym )
-                - var i = 1; 
+                input(type="hidden", name="apogee", value= event.apogee )
+                input(type="hidden", name="acronym", value= event.acronym )
+                input(type="hidden", name="session", value= event.session )
+                - for (var i = 0; i < event.session ; i++) {
                     -var session = "Session "+ i
-                    -var sessionID = "session"+ i
-                    div.row(id=sessionID)
+                    div
                         +session(session,i)
+                        -var attributes=({'onclick':'addEntryCourse('+i+')'})
+                - }
+                    
+                input.btn.btn-default(type="submit", name ="action", value="Add Session") 
+                input.btn.btn-default(type="submit", name="action", value="Create")
 
-                div.row
-                    -var attributes=({'onclick':'addEntryCourse('+last_session+')'})
-                    input.btn.btn-default(type="submit", value="Add Session")&attributes(attributes)
-                    input.btn.btn-default(type="submit", value="Create")
-
+        br
+        br
+        br
+        br
         // Datepickr from https://github.com/joshsalverda/datepickr
         script(src="/javascripts/datepickr.min.js")
         script(type='text/javascript').

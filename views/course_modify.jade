@@ -83,6 +83,7 @@ block content
             br
             br
             form.form-inline(action="/course", method="POST")
+                input(type="hidden", name="ID", value= event.ID )
                 input(type="hidden", name="apogee", value= apogee )
                 input(type="hidden", name="title", value= title )
                 div.row

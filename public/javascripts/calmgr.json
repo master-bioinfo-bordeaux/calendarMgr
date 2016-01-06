@@ -89,13 +89,76 @@
     "Domenger JP", 
     "Garenne A", 
     "Hernould M", 
+    "Melancon G", 
     "Nogu&egrave;s X", 
     "Pinaud B", 
     "Taveau JC", 
     "Th&eacute;bault P", 
     "Uricaru R"
   ], 
+  
+  "status" : [
+    "--",
+    "Mr",
+    "Ms",
+    "Dr",
+    "Pr"
+  ],
+  "tracks" : [
+    {
+        "key"  : 0,
+        "value": "None"
+    },
+    {
+        "key"  : 1,
+        "value": "C++BIO[required]"
+    },
+    {
+        "key"  : 2,
+        "value": "GenOrg[required]"
+    },
+    {
+        "key"  : 4,
+        "value": "OrgEco[required]"
+    },
+    {
+        "key"  : 8,
+        "value": "BSC[required]"
+    },
+    {
+        "key"  : 16,
+        "value": "C++BIO[elective]"
+    },
+    {
+        "key"  : 32,
+        "value": "GenOrg[elective]"
+    },
+    {
+        "key"  : 64,
+        "value": "OrgEco[elective]"
+    },
+    {
+        "key"  : 128,
+        "value": "BSC[elective]"
+    }
+  ],
+  
   "courses" : {
+    "EVENT": {
+      "apogee": "EVENT", 
+      "acronym": "Event",
+      "track": "F"
+    }, 
+    "PRESS": {
+      "apogee": "PRESS", 
+      "acronym": "Press",
+      "track": "F"
+    }, 
+    "CONFERENCE": {
+      "apogee": "CONFERENCE", 
+      "acronym": "Conference",
+      "track": "F"
+    }, 
     "B1BS7M06": {
       "apogee": "B1BS7M06", 
       "acronym": "S07::Anglais",
@@ -163,17 +226,17 @@
     }, 
     "C0BS8M01": {
       "apogee": "C0BS8M01", 
-      "acronym": "S08::InfoApp",
+      "acronym": "S08::IApp",
       "track": "F"
     }, 
     "C0BS8M01-Model": {
       "apogee": "C0BS8M01-Model", 
-      "acronym": "S08::InfoApp-Model",
+      "acronym": "S08::IApp-Model",
       "track": "F"
     }, 
     "C0BS8M01-Imag": {
       "apogee": "C0BS8M01-Imag", 
-      "acronym": "S08::InfoApp-Imag",
+      "acronym": "S08::IApp-Imag",
       "track": "F"
     }, 
     "J1BS8202": {
@@ -183,7 +246,7 @@
     },
     "J1BS9204": {
       "apogee": "J1BS9204", 
-      "acronym": "S09::ClassData",
+      "acronym": "S09::ClssData",
       "track": "F"
     }, 
     "F1BS9201": {
@@ -228,7 +291,7 @@
     }, 
     "J1BS9207": {
       "apogee": "J1BS9207", 
-      "acronym": "S09::AlgoGraph",
+      "acronym": "S09::AlgoGrph",
       "track": "F"
     }, 
     "J1BS9206": {
@@ -259,6 +322,22 @@
   
   },
   
+  "events" : {
+      "Conference" : {
+        "apogee" : "CONFERENCE",
+        "type"   : "Conference"
+      },
+      "Evenement" : {
+        "apogee" : "EVENT",
+        "type"   : "Evenement"
+      },
+      "RevuePresse" : {
+        "apogee" : "PRESS",
+        "type"   : "RevuePresse"
+      }
+      
+  },
+  
   "semesters": [
     "--", 
     "S7", 
@@ -274,16 +353,20 @@
   ], 
   "types": [
     "Unknown", 
-    "Conférence", 
+    "Conference", 
     "Cours+TD", 
     "Cours", 
     "E-learning", 
+    "Evenement", 
     "Examen", 
+    "Presentation", 
     "Projet", 
+    "RevuePresse", 
     "Soutenance", 
     "TD", 
     "TD machine", 
-    "TP"
+    "TP",
+    "Vacances"
   ], 
   "years": [
     "2015", 

@@ -1,0 +1,212 @@
+mixin select-option(val, name)
+    if (val === name)
+        option(value=name, selected="selected")= name
+    else
+        option(value=name)= name
+        
+        extends layout
+
+mixin select-multiple-option(arr, name)
+    flag=false
+    each val in arr
+        if (val === name.key)
+            option(value=name.key, selected="selected")= name.value
+            flag=true
+    if (!flag)
+        option(value=name.key)= name.value
+            
+
+
+extends layout
+
+block content
+
+        div.splash
+            div.container
+                h1 Calendar Management
+                h2 Modification
+                h2 !{event.summary} &mdash; !{event.acronym}
+
+        div.container
+            br
+            br
+            form(action="/modify", method="POST")
+                input(type="hidden", name="ID", value= event.ID )
+                input(type="hidden", name="apogee", value= event.apogee )
+
+                div.row.col-lg-11
+                    div.col-lg-1 
+                        label Type
+                    div.col-lg-2 
+                        select.form-control(name="type")
+                            each typ, i in settings.types
+                                +select-option(event.comment, typ)
+                    div.col-lg-1 
+                        label Title
+                    div.col-lg-7
+                        input.form-control#title(type="text",name="title",value=event.title)
+
+                div.row.col-lg-11
+                    br 
+                    div.col-lg-1 
+                        label Lecturer
+                    div.col-lg-2
+                        -var lec_status=event.lecturer.substr(0,2);
+                        -var lec_name=event.lecturer.substring(3,event.lecturer.lastIndexOf(" "));
+                        -var lec_initials= event.lecturer.substring(event.lecturer.lastIndexOf(" ")+1);
+                        select.form-control(name="status")
+                            each status, i in settings.status
+                                +select-option(lec_status, status)
+                    div.col-lg-6 
+                        input.form-control(type="text",name="name",placeholder="Name",value=lec_name)
+                    div.col-lg-2 
+                        input.form-control(type="text",name="initials",placeholder="Initials",value=lec_initials)
+                div.row.col-lg-11
+                    br 
+                    div.col-lg-1 
+                        label Content
+                    div.col-lg-10
+                        textarea.form-control#description(name="description")
+                            =event.description
+                div.row.col-lg-11
+                    br 
+                    div.col-lg-1 
+                        label Students
+                    div.col-lg-2 
+                        select.form-control(name="year")
+                            if (event.year == 0)
+                                option(value="0", selected="selected") None
+                            else
+                                option(value="0") None
+                                
+                            if (event.year == 1)
+                                option(value="1", selected="selected") M1
+                            else
+                                option(value="1") M1
+                                
+                            if (event.year == 2)
+                                option(value="2", selected="selected") M2
+                            else
+                                option(value="2") M2
+                                
+                            if (event.year == 3)
+                                option(value="3", selected="selected") M1+M2
+                            else
+                                option(value="3") M1+M2
+                            
+                    div.col-lg-8.btn-toolbar
+                        label.pull-left(style="width:130px") Track [required]:&nbsp;
+                        label.btn.btn-danger
+                            input(type="radio",name="track0",value="1") 
+                            !="C++Bio"
+                        label.btn.btn-danger
+                            input(type="radio",name="track1",value="2") 
+                            !="GenOrg"
+                        label.btn.btn-danger
+                            input(type="radio",name="track2",value="4") 
+                            !="OrgEco"
+
+                div.row.col-lg-11
+                    br
+
+                    div.col-lg-1 
+                        label Group
+                    div.col-lg-2 
+                        select.form-control(name="group")
+                            each grp, i in settings.students
+                                option(value=grp ) #{grp}
+                    div.col-lg-8.btn-toolbar
+                        label.pull-left(style="width:130px") Track [elective]:&nbsp;
+                        label.btn.btn-success
+                            -var myTracks = parseInt(event.tracks,16);
+                            if ( (myTracks & 16) == 16)
+                                input(type="radio",name="track0",value="16",checked="checked") 
+                            else
+                                input(type="radio",name="track0",value="16") 
+
+                            !="C++Bio"
+                        label.btn.btn-success
+                            if ( (myTracks & 32) == 32)
+                                input(type="radio",name="track1",value="32",checked="checked") 
+                            else
+                                input(type="radio",name="track1",value="32") 
+                            !="GenOrg"
+                        label.btn.btn-success
+                            if ( (myTracks & 64) == 64)
+                                input(type="radio",name="track2",value="64",checked="checked") 
+                            else
+                                input(type="radio",name="track2",value="64") 
+                            !="OrgEco"
+
+
+                div.row.col-lg-11
+                    - var mydate = event.date_start.substr(0,10);
+                    - var start_hour = event.date_start.substr(11,2);
+                    - var start_mins = event.date_start.substr(14,2);
+                    - var end_hour   = event.date_end.substr(11,2);
+                    - var end_mins   = event.date_end.substr(14,2);
+                    br  
+                    div.col-lg-1
+                        label Date:
+                    div.col-lg-2
+                        input.form-control.datepickr(name="date", placeholder="yyyy-mm-dd", value=mydate)
+                    div.col-lg-1
+                        label From 
+                    div.col-lg-3
+                        select.contents#starthh(name="starthh")
+                            each hour, i in settings.hours
+                                +select-option(start_hour, hour)
+                        label &nbsp;:&nbsp;
+                        select.contents#startmm(name="startmm")
+                            each mins, i in settings.minutes
+                                +select-option(start_mins, mins)
+                    div.col-lg-1
+                        label To 
+                    div.form-group.col-lg-3
+                        select.contents#endhh(name="endhh")
+                            each hour, i in settings.hours
+                                +select-option(end_hour, hour)
+                        label &nbsp;:&nbsp;
+                        select.contents#endmm(name="endmm")
+                            each mins, i in settings.minutes
+                                +select-option(end_mins, mins)
+                                
+                div.row.col-lg-11
+                    br 
+                    div.col-lg-1 
+                        label Location
+                    div.form-group.col-lg-3
+                        select.form-control.contents#location(name="location" )
+                            - var tmp = event.location.match(/(.+)@/);
+                            - var locationBuilding = tmp[1];
+                            - tmp = event.location.match(/@(\d+)/);
+                            - var locationRoom = tmp[1];
+                            each loc, i in settings.locations
+                                +select-option(locationBuilding, loc)
+                    div.col-lg-2 
+                        label Room / Amphi
+                    div.form-group.col-lg-4
+                        input.contents#room(name="room", placeholder="000", value=locationRoom )
+
+                br
+                br
+                div.row.col-lg-4
+                    a.btn.btn-primary(href="/calendar") Cancel
+                    &nbsp;
+                    input.btn.btn-default(type="submit", value="Modify")
+        br
+        br
+        br
+        br
+
+        // Datepickr from https://github.com/joshsalverda/datepickr
+        script(src="/javascripts/datepickr.min.js")
+        script(type='text/javascript').
+            // Overwrite the global datepickr prototype
+            // Won't affect previously created datepickrs, but will affect any new ones
+            datepickr.init.prototype.l10n.months.longhand = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+            datepickr.init.prototype.l10n.weekdays.shorthand = ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'];
+
+            // Custom date format
+            datepickr('.datepickr',{ dateFormat: 'Y-m-d'});
+
