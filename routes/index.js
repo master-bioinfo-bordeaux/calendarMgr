@@ -50,7 +50,7 @@ function updateCalendarData(y,m,d) {
     calendar.weekdays = getWeekDays(y,m,d);
     calendar.weeknum  = getISOWeekNum(y,m,d);
     calendar.events   = searchEvents();
-    console.log(JSON.stringify(calendar.events));
+    // console.log(JSON.stringify(calendar.events));
     
     function getWeekDays(y,m,d) {
         var months    = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -114,7 +114,6 @@ function updateCalendarData(y,m,d) {
             var element = calendar.data[index];
             var startDate = new Date(element.date_start);
             var endDate   = new Date(element.date_end);
-            console.log(startDate);
             
             // From MON to FRI
             for (var i = 1; i < 6; i++) {
@@ -122,16 +121,17 @@ function updateCalendarData(y,m,d) {
                 var dayD       = day.toCalString().substr(0,10);       // Days number since UTC
                 var startDateD = element.date_start.substr(0,10); // Days number since UTC
                 var endDateD   = element.date_end.substr(0,10);   // Days number since UTC
-                console.log(dayD,startDateD,endDateD,calendar.date.getDate(),today.getDay(),day, day.toLocaleString());
+                // console.log(dayD,startDateD,endDateD,calendar.date.getDate(),today.getDay(),day, day.toLocaleString());
                 if ( dayD >= startDateD && dayD <= endDateD ) { // HACK: What about multi-days event ?
-                    console.log(day + ' creates an event with ' + element.ID + ' ' +  element.summary);
-                    element.acronym = calmgr.courses[element.summary].acronym;
+                    // console.log(day + ' creates an event with ' + element.ID + ' ' +  element.summary);
+                    // Obsolete
+                    // element.acronym = calmgr.courses[element.summary].acronym;
                     element.warnings = [];
                     if (element.lecturer === "------") {
                         element.warnings.push(" No lecturer!!");
                     }
                     if (element.location.search('None::None@') != -1) {
-                        element.warnings.push(" No address!!");
+                        element.warnings.push(" No building!!");
                     }
                     if (element.location.search('@000') != -1) {
                         element.warnings.push(" No classroom!!");
@@ -169,7 +169,32 @@ function updateCalendarData(y,m,d) {
     }
 }
 
-
+    function createID(data, login) {
+        var sem = data.acronym.substr(0,2) === "S07";
+        var master_year = (data.acronym.substr(0,2) === "S07" || data.acronym.substr(0,2) === "S08" ) ? 1 : 2;
+        var ID = "C"+ master_year + tracks + new Date().toISOString().replace(/[-:.Z]/g,'') + "@" + login; 
+        return ID;
+    }
+    
+    function createCourse(data,ID) {
+        var event = {};
+        var tracks = "F"; // Common course must be set correctly or read from courses JSON description 
+        event.ID         = ID;
+        event.apogee     = data.apogee;
+        event.acronym    = data.acronym;
+        event.type       = data.type;
+        event.summary    = data.apogee;
+        event.date_start = data.date + "T" + data.starthh + ':' + data.startmm;
+        event.date_end   = data.date + "T" + data.endhh   + ':' + data.endmm;
+        event.group      = data.group;
+        event.lecturer   = data.lecturer;
+        event.location   = data.location + "@" + data.room;
+        event.description = "None";
+        event.comment    = data.title; // Remove semester ???
+        console.log('COURSE ' + JSON.stringify(event));
+        
+        return event;
+    }
 
 /* GET index main page. */
 router.get('/', function(req, res, next) {
@@ -367,6 +392,8 @@ router.post('/calendar', function(req, res, next) {
         new_event.apogee = apogee;
         new_event.sessions = [];
         new_event.sessions[0] = {};
+        new_event.sessions[0].location = "None::None";
+        new_event.sessions[0].room = "000";
         new_event.session = 1;
 
         res.render('course', {'event' : new_event, 'settings': calmgr});
@@ -376,18 +403,7 @@ router.post('/calendar', function(req, res, next) {
 
     
     function getTitle(entry,list) {
-        var title='unknown';
-        var count = 0;
-        var stop = false;
-        while (!stop  && count < list.length) {
-            console.log(list[count].apogee + "=?=" + entry);
-            if (entry === list[count].apogee) {
-                title = list[count].acronym;
-                stop = true;
-            }
-            count++;
-        }
-        return title;
+        return list[entry].acronym || 'unknown';
     }
     
 });
@@ -413,7 +429,8 @@ router.post('/course', function(req, res, next) {
             events.sessions[i].apogee = events.apogee;
             events.sessions[i].acronym = events.acronym;
             console.log(events.sessions[i]);
-            var e = createEvent(events.sessions[i]);
+            var myID = createID(data,me.login);
+            var e = createCourse(events.sessions[i], myID);
             // Add in the calendar
             calendar.data[e.ID] = e;
             console.log(JSON.stringify(calendar.data));
@@ -457,74 +474,9 @@ router.post('/course', function(req, res, next) {
         return mod_event;
     }
     
-    function createEvent(data) {
-        var event = {};
-        var sem = data.acronym.substr(0,2) === "S07";
-        var master_year = (data.acronym.substr(0,2) === "S07" || data.acronym.substr(0,2) === "S08" ) ? 1 : 2;
-        var tracks = "F"; // Common course must be set correctly or read from courses JSON description 
-        event.ID = "C"+ master_year + tracks + new Date().toISOString().replace(/[-:.Z]/g,'') + "@" + me.login; 
-        event.apogee     = data.apogee;
-        event.acronym    = data.acronym;
-        event.type       = data.type;
-        event.summary    = data.apogee;
-        event.date_start = data.date + "T" + data.starthh + ':' + data.startmm;
-        event.date_end   = data.date + "T" + data.endhh   + ':' + data.endmm;
-        event.group      = data.group;
-        event.lecturer   = data.lecturer;
-        event.location   = data.location + "@" + data.room;
-        event.description = "None";
-        event.comment    = data.title; // Remove semester ???
-        console.log('COURSE ' + JSON.stringify(event));
-        
-        return event;
-    }
+
 });
 
-/***
-router.post('/course', function(req, res, next) {
-    console.log('POST course'+ JSON.stringify(req.body) );
-    var e = createEvent(req.body);
-    calendar.data[e.ID] = e;
-    console.log(JSON.stringify(calendar.data));
-    var ghrepo = me.client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
-    console.log('REPO ' + ghrepo);
-    console.log('SHA ' + calendar.data.sha);
-    ghrepo.updateContents(
-        'data/calendar.json', 
-        'New course session', 
-        unescape(encodeURIComponent(JSON.stringify(calendar.data,null,2))), 
-        calendar.sha,
-        function (err, token) {
-            console.log('ERR '+err);
-            console.log('TOK '+token);
-            if (err === null) {
-                res.redirect("/calendar");
-            }
-        }
-    );
-
-
-    
-    function createEvent(data) {
-        var event = {};
-        var sem = data.title.substr(0,2) === "S07";
-        var master_year = (data.title.substr(0,2) === "S07" || data.title.substr(0,2) === "S08" ) ? 1 : 2;
-        var tracks = "F"; // Common course must be set correctly. 
-        event.ID = "C"+ master_year + tracks + new Date().toISOString().replace(/[-:.Z]/g,'') + "@" + me.login; 
-        event.summary    = data.apogee;
-        event.date_start = data.date1 + "T" + data.starthh1 + ':' + data.startmm1;
-        event.date_end   = data.date1 + "T" + data.endhh1   + ':' + data.endmm1;
-        event.group      = data.group1;
-        event.lecturer   = data.lecturer1;
-        event.location   = data.location1 + "@" + data.room1;
-        event.description = "None";
-        event.comment    = data.type1; 
-        console.log('EVENT ' + JSON.stringify(event));
-        
-        return event;
-    }
-});
-***/
 
 router.get('/event', function(req, res, next) {
     res.render('event', {'year': settings.default_year,'setting' : calmgr});
@@ -566,26 +518,23 @@ router.post('/event', function(req, res, next) {
 
 router.get('/modify', function(req, res, next) {
     var id= req.query.id;
-    console.log('GET ID ' + id) + ' ' + JSON.stringify(calendar.data[id]);
-    calendar.data[id].acronym = calmgr.courses[calendar.data[id].summary].acronym;
     
-    // TODO: Must be improved!!!
-    // var myEvent = Object.create(calendar.data[id]);
-    // Add info about building and room
-    // var tmp = myEvent.location.match(/(.+)@/);
-    // myEvent.locationBuilding = tmp[1];
-    // tmp = myEvent.location.match(/@(\d+)/);
-    // myEvent.room = tmp[1];
+    // Obsolete
+    // calendar.data[id].acronym = calmgr.courses[calendar.data[id].summary].acronym;
+    
+/***
+    TODO: Must be improved!!!
     var answer = calendar.data[id].location.match(/(.+)@/);
     calendar.data[id].locationBuilding = answer[1];
     answer = calendar.data[id].location.match(/@(\d+)/);
     calendar.data[id].locationRoom = answer[1];
+***/
 
-    console.log(JSON.stringify(calendar.data[id]));
-    if (id[0]=== "C") {
+    if (id[0] === "C") {
+        console.log(calendar.data[id]);
         res.render('course_modify', {'event' : calendar.data[id], 'settings': calmgr});
     }
-    else if (id[0]=== "E") {
+    else if (id[0] === "E") {
         res.render('event_modify', {'event' : calendar.data[id], 'settings': calmgr});
     }
 
@@ -598,14 +547,7 @@ router.post('/modify', function(req, res, next) {
     var event = {};
     event.ID = data.ID;
     if (data.ID[0] === "C") {
-        event.summary    = data.apogee;
-        event.title      = data.title;
-        event.lecturer   = data.lecturer;
-        event.date_start = data.date + "T" + data.starthh + ':' + data.startmm;
-        event.date_end   = data.date + "T" + data.endhh   + ':' + data.endmm;
-        event.group      = data.group;
-        event.location   = data.location + "@" + data.room;
-        event.comment    = data.type; 
+        event = createCourse(data, data.ID);
     }
     else if (data.ID[0] === "E") {
         var tracks = parseInt(data.track0) + parseInt(data.track1) + parseInt(data.track2);
@@ -702,38 +644,8 @@ router.get('/auth/github/callback',function (req, res) {
 });
 
 
-/*********************************
-  var code = req.query.code;
-  OAuth2.getOAuthAccessToken(code, {}, function (err, access_token, refresh_token) {
-    if (err) {
-      console.log(err);
-    }
-    accessToken = access_token;
-    // authenticate github API
-    console.log("AccessToken: "+accessToken+"\n");
-    github.authenticate({
-      type: "oauth",
-      token: accessToken
-    });
-  });
-  res.redirect('home');
-});
 
-github.gists.create({
-      "description": "the description for this gist",
-      "public": true,
-      "files": {
-        "TEST_2.md": {
-          "content": "<html><h1>This is a Test!</h1><b>Hello</b></html>"
-        }
-      }
-    }, function(err, rest) {
-      console.log(rest);
-      console.log(err);
-      res.render('/');
-    });
-    *********************************/
-    
-    
     
 module.exports = router;
+
+
