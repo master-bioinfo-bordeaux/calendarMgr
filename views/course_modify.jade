@@ -1,103 +1,123 @@
 mixin select-option(val, name)
     if (val === name)
-        option(value=name, selected="selected")= name
+        option(value=name, selected="selected")!= name
     else
-        option(value=name)= name
+        option(value=name)!= name
 
-mixin session()
-    div.col-lg-12 
-            div.form-group.col-lg-4
-                label.first Type
-                select.contents#type(name='type')
-                    each typ, i in settings.types
-                        +select-option(event.comment, typ)
-                    
-            div.form-group.col-lg-4
-                label.first Lecturer
-                select.contents#lecturer(name="lecturer" )
-                    each one, i in settings.people
-                        +select-option(event.lecturer, one)
-
-            div.form-group.col-lg-4
-                label.first Students
-                select.contents#students(name="students" )
-                    each group, i in settings.students
-                        option(value='#{group}' ) #{group}
-            
-
-    div.col-lg-12 
-            div.form-group.col-lg-4
-                label.first Date
-                - var mydate = event.date_start.substr(0,10);
-                input.datepickr(placeholder="yyyy-mm-dd", value=mydate)
-
-            div.form-group.col-lg-4
-                    label.first From 
-                    -var start_hour = event.date_start.substr(11,2);
-                    -var start_mins = event.date_start.substr(14,2);
-                    -var end_hour   = event.date_end.substr(11,2);
-                    -var end_mins   = event.date_end.substr(14,2);
-                    select.contents#starthh(name="starthh" )
-                        each hour, i in settings.hours
-                            +select-option(start_hour, hour)
-                    label :
-                    select.contents#startmm(name="startmm" )
-                        each mins, i in settings.minutes
-                            +select-option(start_mins, mins)
-                            
-            div.form-group.col-lg-4
-                    label.first To 
-                    select.contents#endhh(name="endhh" )
-                        each hour, i in settings.hours
-                            +select-option(end_hour, hour)
-                    label :
-                    select.contents#endmm(name="endmm" )
-                        each mins, i in settings.minutes
-                            +select-option(end_mins, mins)
-
-    div.col-lg-12  
-            div.form-group.col-lg-4
-                label.first Location
-                select.contents#location(name="location" )
-                    each loc, i in settings.locations
-                        +select-option(event.locationBuilding, loc)
-            div.form-group.col-lg-8
-                label.first Room
-                label.first / Amphi
-                input.contents#room(name="room", placeholder="000", value=event.locationRoom )
+mixin session(title,num)
 
 
 extends layout
 
 block content
 
-
         div.splash
             div.container
                 h1 Calendar Management
-                h2 Modification
-                h2 Course !{event.summary} &mdash; !{event.acronym}
+                h2 Modify Course: !{event.apogee} &mdash; !{event.acronym}
                 hr
 
         div.container
             br
             br
-            form.form-inline(action="/course", method="POST")
+
+            form.form-inline(action="/modify", method="POST")
                 input(type="hidden", name="ID", value= event.ID )
-                input(type="hidden", name="apogee", value= apogee )
-                input(type="hidden", name="title", value= title )
-                div.row
-                    +session()
-                    -var attributes=({'onclick':'addEntryCourse('+i+')'})
+                input(type="hidden", name="apogee", value= event.apogee )
+                input(type="hidden", name="acronym", value= event.acronym )
+                input(type="hidden", name="session", value= event.session )
+                div.col-md-11 
+                    br
+                    div.col-md-1
+                        label Type
+                    div.col-md-3
+                        div.form-group
+                            select.form-control#type(name='type')
+                                each typ, i in settings.types
+                                    +select-option(event.type, typ)
+                    div.col-md-1
+                        label.control-label Lecturer
+                    div.col-md-6
+                        div.form-group
+                            select.form-control#lecturer(name="lecturer" )
+                                optgroup
+                                    each one, i in settings.people
+                                        +select-option(event.lecturer, one)
+                                optgroup
+                                    option(value="Multimedia") Multimedia
 
-                br
-                br
-                div.col-lg-4
-                    input.btn.btn-default(type="submit", value="Cancel")
-                    &nbsp;
-                    input.btn.btn-default(type="submit", value="Modify")
-                    
+                div.col-md-11
+                    br
+                    div.col-md-1
+                        label Students
+                    div.col-md-3
+                        div.form-group
+                            select.form-control#students(name="students" )
+                                each group, i in settings.students
+                                    +select-option(event.students, group)
+                        
+                div.col-md-11
+                    - var mydate = event.date_start.substr(0,10);
+                    - var start_hour = event.date_start.substr(11,2);
+                    - var start_mins = event.date_start.substr(14,2);
+                    - var end_hour   = event.date_end.substr(11,2);
+                    - var end_mins   = event.date_end.substr(14,2);
+             
+                    br
+                    div.col-md-1
+                        label Date
+                    div.col-md-3
+                        input.form-control.datepickr(name="date" ,placeholder="yyyy-mm-dd",value=mydate)
+                    div.col-md-1
+                        label From 
+                    div.col-md-2
+                            select.form-control#starthh(name="starthh" )
+                                each hour, i in settings.hours
+                                    +select-option(start_hour, hour)
+                            label :
+                            select.form-control#startmm(name="startmm" )
+                                each mins, i in settings.minutes
+                                    +select-option(start_mins, mins)
+                    div.col-md-1
+                            label To 
+                    div.col-md-2
+                            select.form-control#endhh(name="endhh" )
+                                each hour, i in settings.hours
+                                    +select-option(end_hour, hour)
+                            label :
+                            select.form-control#endmm(name="endmm" )
+                                each mins, i in settings.minutes
+                                    +select-option(end_mins, mins)
 
+                div.col-md-11
+                    - var tmp = event.location.match(/(.+)@/);
+                    - var locationBuilding = tmp[1];
+                    - tmp = event.location.match(/@(\d+)/);
+                    - var locationRoom = tmp[1];
+                    br
+                    div.col-md-1 
+                        label Location
+                    div.col-md-3.form-group
+                            select.form-control.contents#location(name="location" )
+                                each loc, i in settings.locations
+                                    +select-option(locationBuilding, loc)
+                    div.col-md-1 
+                           label(title="Room or Amphi") Room
+                    div.col-md-2 
+                            input.form-control#room(name="room", value=locationRoom,placeholder="000" )
+                            br
+                br
+                div.col-md-8
+                    br
+                    span(style="margin: 0px 3px 0px 3px")
+                        a.btn.btn-default(href="/calendar") Cancel
+                    span(style="margin: 0px 3px 0px 3px")
+                        input.btn.btn-default(type="submit", name="action", value="Modify")
+
+        br
+        br
+        br
+        br
         // Datepickr from https://github.com/joshsalverda/datepickr
         script(src="/javascripts/datepickr.min.js")
         script(type='text/javascript').
@@ -109,10 +129,4 @@ block content
             // Custom date format
             datepickr('.datepickr',{ dateFormat: 'Y-m-d'});
 
-        // jQuery (necessary for Bootstrap's JavaScript plugins)
-        //script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
-        // Include all compiled plugins (below), or include individual files as needed
-        //script(src="/javascripts/bootstrap.min.js")
 
-            
-                

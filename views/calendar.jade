@@ -11,7 +11,7 @@ mixin cell(ev)
         ul.calContent
             li 
                 b=ev.hours
-            li=ev.comment
+            li=ev.apogee
             li!=ev.lecturer
             -var campus = ev.location.match(/(.+)::/)[1];
             -var building = ev.location.match(/::(.+)@/)[1];
@@ -27,7 +27,7 @@ mixin cell(ev)
                 = room
             each warn in ev.warnings
                 li 
-                    i.fa.fa-exclamation-triangle(style="color: #f00")=warn
+                    i.fa.fa-exclamation-triangle(style="color: #f00")!=warn
 
 
 
@@ -45,7 +45,7 @@ block content
         br
         br
                 
-        div.row.col-lg-6
+        div.row.col-md-6
             a.btn.btn-default(href="/previousweek")
                 i.fa.fa-backward.fa-lg
             span(style="font-size: 20px")= 'Week ' + weeknum
@@ -54,7 +54,7 @@ block content
         br
         br
         div.row
-            div.col-lg-3 
+            div.col-md-3 
                 p.text-center= days[0].day
                     sub=days[0].date+days[0].month
                 ul(style="padding-left:10px;")
@@ -72,62 +72,61 @@ block content
                             br
 
                             form(action="/calendar", method="POST")
-                                li 
-                                    select#sem(name="sem", onchange="addSemesterCourse()")
+                                li
+                                    select.form-control#sem(style="width:80%; margin-bottom: 10px",name="sem", onchange="addSemesterCourse()")
                                         each sem, i in settings.semesters
                                             option(value=i+6) #{sem}
-                                br
                                 li
-                                    select#S6(name="S6")
+                                    select.form-control#S6(style="width:80%; margin-bottom: 10px",name="S6")
                                         each course, i in menus.s06
                                             option(value='#{course.apogee}' ) #{course.name}
-                                    select#S7(name="S7")
+                                    select.form-control#S7(style="width:80%; margin-bottom: 10px",name="S7")
                                         each course, i in menus.s07
                                             option(value='#{course.apogee}' ) #{course.name}
-                                    select#S8(name="S8")
+                                    select.form-control#S8(style="width:80%; margin-bottom: 10px",name="S8")
                                         each course, i in menus.s08
                                             option(value='#{course.apogee}' ) #{course.name}
-                                    select#S9(name="S9")
+                                    select.form-control#S9(style="width:80%; margin-bottom: 10px",name="S9")
                                         each course, i in menus.s09
                                             option(value='#{course.apogee}') #{course.name}
-                                    select#S10(name="S10")
+                                    select.form-control#S10(style="width:80%; margin-bottom: 10px",name="S10")
                                         each course, i in menus.s10
                                             option(value='#{course.apogee}' ) #{course.name}
-                                    select#S11(name="S11")
+                                    select.form-control#S11(style="width:80%; margin-bottom: 10px",name="S11")
                                         each course, i in menus.s11
                                             option(value='#{course.apogee}' ) #{course.name}
                                 br
                                 li
-                                    &nbsp;
-                                    input.btn.btn-default.pull-right(type="submit", value="Submit") 
+                                    span.pull-right(style="margin-right: 10px")
+                                        input.btn.btn-default(type="submit", value="Submit") 
 
                         br
                         br
 
 
 
-            div.col-lg-2  
+            div.col-md-2  
                 p.text-center= days[1].day
                     sub=days[1].date+days[1].month
                 ul(style="padding-left:10px;")
                     each event in events[2]
                         +cell(event)
 
-            div.col-lg-2  
+            div.col-md-2  
                 p.text-center= days[2].day
                     sub=days[2].date+days[2].month
                 ul(style="padding-left:10px;")
                     each event in events[3]
                         +cell(event)
 
-            div.col-lg-2  
+            div.col-md-2  
                 p.text-center= days[3].day
                     sub=days[3].date+days[3].month
                 ul(style="padding-left:10px;")
                     each event in events[4]
                         +cell(event)
 
-            div.col-lg-2  
+            div.col-md-2  
                 p.text-center= days[4].day
                     sub=days[4].date+days[4].month
                 ul(style="padding-left:10px;")

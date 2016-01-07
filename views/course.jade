@@ -1,66 +1,80 @@
 mixin select-option(val, name)
     if (val === name)
-        option(value=name, selected="selected")= name
+        option(value=name, selected="selected")!= name
     else
-        option(value=name)= name
+        option(value=name)!= name
 
 mixin session(title,num)
-    div.col-lg-12 
-
-        h2= title
-        div.col-lg-6
+    div.col-md-11 
+        br
+        h3(style="padding: 5px;color: #fff;background-color:#000")= title
+        div.col-md-1
+            label Type
+        div.col-md-3
             div.form-group
-                label.first Type
                 select.form-control#type(name='type'+ num)
                     each typ, i in settings.types
                         +select-option(event.sessions[num].type, typ)
-        div.col-lg-6
+        div.col-md-1
+            label.control-label Lecturer
+        div.col-md-6
             div.form-group
-                label.control-label Lecturer
                 select.form-control#lecturer(name="lecturer"+ num )
                     optgroup
                         each one, i in settings.people
                             +select-option(event.sessions[num].lecturer, one)
                     optgroup
                         option(value="Multimedia") Multimedia
-        div.col-lg-6
+
+    div.col-md-11
+        br
+        div.col-md-1
+            label Students
+        div.col-md-3
             div.form-group
-                label.first Students
                 select.form-control#students(name="students"+ num )
                     each group, i in settings.students
                         +select-option(event.sessions[num].students, group)
             
-        div.col-lg-6
+    div.col-md-11 
+        br
+        div.col-md-1
+            label Date
+        div.col-md-3
+            input.form-control.datepickr(name="date" + num,placeholder="yyyy-mm-dd",value=event.sessions[num].date)
+        div.col-md-1
+            label From 
+        div.col-md-2
+                select.form-control#starthh(name="starthh"+ num )
+                    each hour, i in settings.hours
+                        +select-option(event.sessions[num].starthh, hour)
+                label :
+                select.form-control#startmm(name="startmm"+ num )
+                    each mins, i in settings.minutes
+                        +select-option(event.sessions[num].startmm, mins)
+        div.col-md-1
+                label To 
+        div.col-md-2
+                select.form-control#endhh(name="endhh"+ num )
+                    each hour, i in settings.hours
+                        +select-option(event.sessions[num].endhh, hour)
+                label :
+                select.form-control#endmm(name="endmm"+ num )
+                    each mins, i in settings.minutes
+                        +select-option(event.sessions[num].endmm, mins)
 
-            div.form-group
-                label.first Date
-                input.form-control.datepickr(name="date" + num,placeholder="yyyy-mm-dd",value=event.sessions[num].date)
-
-                div.form-group
-                    label.first From 
-                    select.contents#starthh(name="starthh"+ num )
-                        each hour, i in settings.hours
-                            +select-option(event.sessions[num].starthh, hour)
-                    label :
-                    select.contents#startmm(name="startmm"+ num )
-                        each mins, i in settings.minutes
-                            +select-option(event.sessions[num].startmm, mins)
-                    label To 
-                    select.contents#endhh(name="endhh"+ num )
-                        each hour, i in settings.hours
-                            +select-option(event.sessions[num].endhh, hour)
-                    label :
-                    select.contents#endmm(name="endmm"+ num )
-                        each mins, i in settings.minutes
-                            +select-option(event.sessions[num].endmm, mins)
-
-            div.form-group
-                label.first Location
+    div.col-md-11
+        br
+        div.col-md-1 
+            label Location
+        div.col-md-3.form-group
                 select.form-control.contents#location(name="location"+ num )
                     each loc, i in settings.locations
                         +select-option(event.sessions[num].location, loc)
-               label.first Room/Amphi
-                input.contents#room(name="room"+ num, value=event.sessions[num].room,placeholder="000" )
+        div.col-md-1 
+               label(title="Room or Amphi") Room
+        div.col-md-2 
+                input.form-control#room(name="room"+ num, value=event.sessions[num].room,placeholder="000" )
 
 
 extends layout
@@ -87,9 +101,16 @@ block content
                         +session(session,i)
                         -var attributes=({'onclick':'addEntryCourse('+i+')'})
                 - }
-                    
-                input.btn.btn-default(type="submit", name ="action", value="Add Session") 
-                input.btn.btn-default(type="submit", name="action", value="Create")
+                br
+                br
+                div.col-md-8
+                    br
+                    span(style="margin: 0px 3px 0px 3px")
+                        a.btn.btn-default(href="/calendar") Cancel
+                    span(style="margin: 0px 3px 0px 3px")
+                        input.form-control.btn.btn-default(type="submit", name ="action", value="Add Session") 
+                    span(style="margin: 0px 3px 0px 3px")
+                        input.btn.btn-default(type="submit", name="action", value="Create")
 
         br
         br
