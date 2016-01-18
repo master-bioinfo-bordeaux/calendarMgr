@@ -172,13 +172,13 @@ function updateCalendarData(y,m,d) {
     function createID(data, login) {
         var sem = data.acronym.substr(0,2) === "S07";
         var master_year = (data.acronym.substr(0,2) === "S07" || data.acronym.substr(0,2) === "S08" ) ? 1 : 2;
+        var tracks = "7"; // TODO: Must be set correctly or read from `courses` JSON description
         var ID = "C"+ master_year + tracks + new Date().toISOString().replace(/[-:.Z]/g,'') + "@" + login; 
         return ID;
     }
     
     function createCourse(data,ID) {
         var event = {};
-        var tracks = "F"; // Common course must be set correctly or read from courses JSON description 
         event.ID         = ID;
         event.apogee     = data.apogee;
         event.acronym    = data.acronym;
@@ -429,7 +429,7 @@ router.post('/course', function(req, res, next) {
             events.sessions[i].apogee = events.apogee;
             events.sessions[i].acronym = events.acronym;
             console.log(events.sessions[i]);
-            var myID = createID(data,me.login);
+            var myID = createID(events.sessions[i],me.login);
             var e = createCourse(events.sessions[i], myID);
             // Add in the calendar
             calendar.data[e.ID] = e;
