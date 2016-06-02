@@ -45,10 +45,12 @@
     "16", 
     "17", 
     "18", 
-    "19"
+    "19",
+    "00" 
   ], 
   "locations": [
     "None::None", 
+    "Talence::A9",
     "Talence::A21-OMEGA",
     "Talence::A22", 
     "Talence::A29-CREMI", 
@@ -84,23 +86,29 @@
     "------", 
     "Bernaulte JJ", 
     "Beurton-Aimar M",  
-    "Benoit-Pinault J", 
+    "Benois-Pineau J", 
     "Beauvoit B", 
-    "Boursicault A", 
+    "Bonnafous P", 
+    "Boussicault A", 
     "Carrere M",
     "Chaumette S", 
     "Colombi&eacute; S",
-    "de Daruvar A", 
+    "de Daruvar A",
+    "David D", 
     "Delmas O", 
     "Desbarats P",
     "Dieuaide M", 
     "Domenger JP", 
+    "Dubois S",
     "Garenne A", 
     "Hernould M", 
+    "Heric&eacute; C", 
     "H&eacute;ric&eacute; C",
+    "Lubac B",
     "Melan&ccedil;on G", 
     "Nogu&egrave;s X", 
     "Pinaud B", 
+    "Sénéchal N"
     "Taveau JC", 
     "Th&eacute;bault P", 
     "Uricaru R"
@@ -153,20 +161,214 @@
   ],
   
   "courses" : {
+      "4TBA804U": {
+        "acronym": "S08::BBP", 
+        "apogee": "4TBA804U", 
+        "tracks": "0x60"
+      }, 
+      "4TBA806U": {
+        "acronym": "S08::Genepi", 
+        "apogee": "4TBA806U", 
+        "tracks": "0x60"
+      }, 
+      "4TBA903U": {
+        "acronym": "S09::QPGE", 
+        "apogee": "4TBA903U", 
+        "tracks": "0x60"
+      }, 
+      "4TBA904U": {
+        "acronym": "S09::PlantBr", 
+        "apogee": "4TBA904U", 
+        "tracks": "0x60"
+      }, 
+      "4TBC801U": {
+        "acronym": "S08::POO", 
+        "apogee": "4TBC801U", 
+        "tracks": "0x10"
+      }, 
+      "4TBC901U": {
+        "acronym": "S09::AppO", 
+        "apogee": "4TBC901U", 
+        "tracks": "0x10"
+      }, 
+      "4TBE801U": {
+        "acronym": "S08::BioDiv", 
+        "apogee": "4TBE801U", 
+        "tracks": "0x60"
+      }, 
+      "4TBE802U": {
+        "acronym": "S08::EcoTerr", 
+        "apogee": "4TBE802U", 
+        "tracks": "0x60"
+      }, 
+      "4TBE803U": {
+        "acronym": "S08::Aqua", 
+        "apogee": "4TBE803U", 
+        "tracks": "0x60"
+      }, 
+      "4TBE901U": {
+        "acronym": "S09::TDE++", 
+        "apogee": "4TBE901U", 
+        "tracks": "0x70"
+      }, 
+      "4TBE902U": {
+        "acronym": "S09::EcoComm", 
+        "apogee": "4TBE902U", 
+        "tracks": "0x60"
+      }, 
+      "4TBI001U": {
+        "acronym": "S10::Stage", 
+        "apogee": "4TBI001U", 
+        "tracks": "0x0F"
+      }, 
+      "4TBI701U": {
+        "acronym": "S07::IMAJS", 
+        "apogee": "4TBI701U", 
+        "tracks": "0x0F"
+      }, 
+      "4TBI702U": {
+        "acronym": "S07::APU", 
+        "apogee": "4TBI702U", 
+        "tracks": "0x0F"
+      }, 
+      "4TBI702U-Prog": {
+        "acronym": "S07::APU-Prog", 
+        "apogee": "4TBI702U-Prog", 
+        "tracks": "0x0F"
+      }, 
+      "4TBI702U-USI": {
+        "acronym": "S07::APU-USI", 
+        "apogee": "4TBI702U-USI", 
+        "tracks": "0x0F"
+      }, 
+      "4TBI703U": {
+        "acronym": "S07::OBI", 
+        "apogee": "4TBI703U", 
+        "tracks": "0x0F"
+      }, 
+      "4TBI704U": {
+        "acronym": "S07::Anglais", 
+        "apogee": "4TBI704U", 
+        "tracks": "0x0F"
+      }, 
+      "4TBI801U": {
+        "acronym": "S08::AlgoPrg2", 
+        "apogee": "4TBI801U", 
+        "tracks": "0x01"
+      }, 
+      "4TBI802U": {
+        "acronym": "S08::CPRD", 
+        "apogee": "4TBI802U", 
+        "tracks": "0x07"
+      }, 
+      "4TBI803U": {
+        "acronym": "S08::BDD", 
+        "apogee": "4TBI803U", 
+        "tracks": "0x07"
+      }, 
+      "4TBI804U": {
+        "acronym": "S08::NGS", 
+        "apogee": "4TBI804U", 
+        "tracks": "0x07"
+      }, 
+      "4TBI805U": {
+        "acronym": "S08::ViMod", 
+        "apogee": "4TBI805U", 
+        "tracks": "0x70"
+      }, 
+      "4TBI901U": {
+        "acronym": "S09::StrubiGL", 
+        "apogee": "4TBI901U", 
+        "tracks": "0x61"
+      }, 
+      "4TBI902U": {
+        "acronym": "S09::FILBI", 
+        "apogee": "4TBI902U", 
+        "tracks": "0x0F"
+      }, 
+      "4TBI903U": {
+        "acronym": "S09::ProjLog", 
+        "apogee": "4TBI903U", 
+        "tracks": "0x61"
+      }, 
+      "4TBI904U": {
+        "acronym": "S09::DEA", 
+        "apogee": "4TBI904U", 
+        "tracks": "0x07"
+      }, 
+      "4TBI905U": {
+        "acronym": "S09::IRD", 
+        "apogee": "4TBI905U", 
+        "tracks": "0x07"
+      }, 
+      "4TBI906U": {
+        "acronym": "S09::MOCELL", 
+        "apogee": "4TBI906U", 
+        "tracks": "0x70"
+      }, 
+      "4TBIEVNT": {
+        "acronym": "Sxx::Event", 
+        "apogee": "4TBIEVNT", 
+        "tracks": "0x00"
+      }, 
+      "4TBIMEET": {
+        "acronym": "Sxx::Conference", 
+        "apogee": "4TBIMEET", 
+        "tracks": "0x00"
+      }, 
+      "4TBIN01U": {
+        "acronym": "S08::StgVol", 
+        "apogee": "4TBIN01U", 
+        "tracks": "0xF0"
+      }, 
+      "4TBIPRSS": {
+        "acronym": "Sxx::Press", 
+        "apogee": "4TBIPRSS", 
+        "tracks": "0x07"
+      }, 
+      "4TBIVACA": {
+        "acronym": "Sxx::Holidays", 
+        "apogee": "4TBIVACA", 
+        "tracks": "0x0F"
+      }, 
+      "4TDE901U": {
+        "acronym": "S09::SIG", 
+        "apogee": "4TDE901U", 
+        "tracks": "0x60"
+      }, 
+      "4TDE902U": {
+        "acronym": "S09::InnovTech", 
+        "apogee": "4TDE902U", 
+        "tracks": "0x60"
+      }, 
+      "4TEC701U": {
+        "acronym": "S07::TDE", 
+        "apogee": "4TEC701U", 
+        "tracks": "0x0F"
+      }
+  },
+  
+  
+  "courses2015" : {
     "EVENT": {
       "apogee": "EVENT", 
       "acronym": "Event",
-      "track": "F"
+      "tracks": "0x0F"
     }, 
     "PRESS": {
       "apogee": "PRESS", 
       "acronym": "Press",
-      "track": "F"
+      "tracks": "0x0F"
     }, 
     "CONFERENCE": {
       "apogee": "CONFERENCE", 
       "acronym": "Conference",
-      "track": "F"
+      "tracks": "0x0F"
+    }, 
+    "HOLIDAYS": {
+      "apogee": "HOLIDAYS", 
+      "acronym": "Holidays",
+      "track": "0x0F"
     }, 
     "B1BS7M06": {
       "apogee": "B1BS7M06", 
@@ -240,12 +442,12 @@
     }, 
     "C0BS8M01-Model": {
       "apogee": "C0BS8M01-Model", 
-      "acronym": "S08::IApp-Model",
+      "acronym": "S08::App-Model",
       "track": "F"
     }, 
     "C0BS8M01-Imag": {
       "apogee": "C0BS8M01-Imag", 
-      "acronym": "S08::IApp-Imag",
+      "acronym": "S08::App-Imag",
       "track": "F"
     }, 
     "J1BS8202": {
@@ -343,6 +545,10 @@
       "RevuePresse" : {
         "apogee" : "PRESS",
         "type"   : "RevuePresse"
+      },
+      "Vacances" : {
+        "apogee" : "HOLIDAYS",
+        "type"   : "Vacances"
       }
       
   },
