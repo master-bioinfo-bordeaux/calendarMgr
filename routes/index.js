@@ -170,9 +170,11 @@ function updateCalendarData(y,m,d) {
 }
 
     function createID(data, login) {
+        // HACK console.log(data);
         var sem = data.acronym.substr(0,2) === "S07";
-        var master_year = (data.acronym.substr(0,2) === "S07" || data.acronym.substr(0,2) === "S08" ) ? 1 : 2;
-        var tracks = "7"; // TODO: Must be set correctly or read from `courses` JSON description
+        var master_year = (data.acronym.substr(0,3) === "S07" || data.acronym.substr(0,3) === "S08" ) ? 1 : 2;
+        console.log("MASTER YEAR " + data.acronym.substr(0,3) +" = "+master_year);
+        var tracks = "7"; // = 1+2+4 TODO: Must be set correctly or read from `courses` JSON description
         var ID = "C"+ master_year + tracks + new Date().toISOString().replace(/[-:.Z]/g,'') + "@" + login; 
         return ID;
     }
@@ -483,14 +485,21 @@ router.get('/event', function(req, res, next) {
 });
 
 router.post('/event', function(req, res, next) {
+    var prefix = '4TBI';
     console.log('POST event '+ JSON.stringify(req.body) );
     var data = req.body;
     var event = {};
     var tracks = parseInt(data.track0) + parseInt(data.track1) + parseInt(data.track2);
  
+    //Clean, preprocess,etc.
+    if (data.room === '' || data.room === undefined) {
+        data.room = '000';
+    }
     event.ID = "E"+ data.year + tracks.toString(16) + new Date().toISOString().replace(/[-:.Z]/g,'') + "@" + me.login; 
-    event.apogee     = calmgr.events[data.type].apogee;
-    event.acronym    = data.type; 
+    var theEventID   = calmgr.eventTypes[data.type];
+    
+    event.apogee     = calmgr.events[theEventID].apogee;
+    event.acronym    = calmgr.events[theEventID].acronym;
     event.summary    = event.apogee;
     event.title      = data.title;
     event.lecturer   = data.status + ' ' + data.name + ' '+ data.initials;

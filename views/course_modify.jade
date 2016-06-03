@@ -92,7 +92,7 @@ block content
                 div.col-md-11
                     - var tmp = event.location.match(/(.+)@/);
                     - var locationBuilding = tmp[1];
-                    - tmp = event.location.match(/@(\d+)/);
+                    - tmp = event.location.match(/@(\w+)/);
                     - var locationRoom = tmp[1];
                     br
                     div.col-md-1 

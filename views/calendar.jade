@@ -53,11 +53,11 @@ block content
                 i.fa.fa-forward.fa-lg
         br
         br
-        div.row
+        div.row.no-gutter
             div.col-md-3 
                 p.text-center= days[0].day
                     sub=days[0].date+days[0].month
-                ul(style="padding-left:10px;")
+                ul(style="padding-left:5px;")
                     each event in events[1]
                         +cell(event)
 
@@ -108,28 +108,28 @@ block content
             div.col-md-2  
                 p.text-center= days[1].day
                     sub=days[1].date+days[1].month
-                ul(style="padding-left:10px;")
+                ul(style="padding-left:5px;")
                     each event in events[2]
                         +cell(event)
 
             div.col-md-2  
                 p.text-center= days[2].day
                     sub=days[2].date+days[2].month
-                ul(style="padding-left:10px;")
+                ul(style="padding-left:5px;")
                     each event in events[3]
                         +cell(event)
 
             div.col-md-2  
                 p.text-center= days[3].day
                     sub=days[3].date+days[3].month
-                ul(style="padding-left:10px;")
+                ul(style="padding-left:5px;")
                     each event in events[4]
                         +cell(event)
 
             div.col-md-2  
                 p.text-center= days[4].day
                     sub=days[4].date+days[4].month
-                ul(style="padding-left:10px;")
+                ul(style="padding-left:5px;")
                     each event in events[5]
                         +cell(event)
             br

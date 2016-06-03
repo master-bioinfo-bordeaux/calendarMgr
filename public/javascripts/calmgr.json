@@ -306,30 +306,10 @@
         "apogee": "4TBI906U", 
         "tracks": "0x70"
       }, 
-      "4TBIEVNT": {
-        "acronym": "Sxx::Event", 
-        "apogee": "4TBIEVNT", 
-        "tracks": "0x00"
-      }, 
-      "4TBIMEET": {
-        "acronym": "Sxx::Conference", 
-        "apogee": "4TBIMEET", 
-        "tracks": "0x00"
-      }, 
       "4TBIN01U": {
         "acronym": "S08::StgVol", 
         "apogee": "4TBIN01U", 
         "tracks": "0xF0"
-      }, 
-      "4TBIPRSS": {
-        "acronym": "Sxx::Press", 
-        "apogee": "4TBIPRSS", 
-        "tracks": "0x07"
-      }, 
-      "4TBIVACA": {
-        "acronym": "Sxx::Holidays", 
-        "apogee": "4TBIVACA", 
-        "tracks": "0x0F"
       }, 
       "4TDE901U": {
         "acronym": "S09::SIG", 
@@ -348,7 +328,36 @@
       }
   },
   
-  
+  "events" : {
+      "4TBIEVNT": {
+        "acronym": "Evt::Event", 
+        "apogee": "4TBIEVNT", 
+        "tracks": "0x00"
+      }, 
+      "4TBIMEET": {
+        "acronym": "Evt::Conference", 
+        "apogee": "4TBIMEET", 
+        "tracks": "0x00"
+      }, 
+      "4TBIPRSS": {
+        "acronym": "Evt::Press", 
+        "apogee": "4TBIPRSS", 
+        "tracks": "0x07"
+      }, 
+      "4TBIVACA": {
+        "acronym": "Evt::Holidays", 
+        "apogee": "4TBIVACA", 
+        "tracks": "0x0F"
+      }
+  },
+  "eventTypes" : {
+      "Conference"   : "4TBIMEET",
+      "RevuePresse"  : "4TBIPRSS",
+      "Event"        : "4TBIEVNT",
+      "Vacances"     : "4TBIVACA",
+      "Presentation" : "4TBIWRKG"
+  },
+
   "courses2015" : {
     "EVENT": {
       "apogee": "EVENT", 
@@ -533,7 +542,7 @@
   
   },
   
-  "events" : {
+  "events2015" : {
       "Conference" : {
         "apogee" : "CONFERENCE",
         "type"   : "Conference"
