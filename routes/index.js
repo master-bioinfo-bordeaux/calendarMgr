@@ -174,7 +174,8 @@ function updateCalendarData(y,m,d) {
         var sem = data.acronym.substr(0,2) === "S07";
         var master_year = (data.acronym.substr(0,3) === "S07" || data.acronym.substr(0,3) === "S08" ) ? 1 : 2;
         console.log("MASTER YEAR " + data.acronym.substr(0,3) +" = "+master_year);
-        var tracks = "7"; // = 1+2+4 TODO: Must be set correctly or read from `courses` JSON description
+        console.log(tracks);
+        var tracks = calmgr.courses[data.apogee].tracks.substr(2,2); // = 1+2+4 TODO: Must be set correctly or read from `courses` JSON description
         var ID = "C"+ master_year + tracks + new Date().toISOString().replace(/[-:.Z]/g,'') + "@" + login; 
         return ID;
     }
