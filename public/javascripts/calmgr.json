@@ -231,6 +231,11 @@
         "apogee": "4TBI702U", 
         "tracks": "0x0F"
       }, 
+      "4TBI702U-Algo": {
+        "acronym": "S07::APU-Algo", 
+        "apogee": "4TBI702U-Algo", 
+        "tracks": "0x0F"
+      }, 
       "4TBI702U-Prog": {
         "acronym": "S07::APU-Prog", 
         "apogee": "4TBI702U-Prog", 
@@ -348,6 +353,11 @@
         "acronym": "Evt::Holidays", 
         "apogee": "4TBIVACA", 
         "tracks": "0x0F"
+      },
+      "4TBIDFNS": {
+        "acronym": "Evt::Defense", 
+        "apogee": "4TBIDFNS", 
+        "tracks": "0x0F"
       }
   },
   "eventTypes" : {
@@ -355,7 +365,8 @@
       "RevuePresse"  : "4TBIPRSS",
       "Event"        : "4TBIEVNT",
       "Vacances"     : "4TBIVACA",
-      "Presentation" : "4TBIWRKG"
+      "Presentation" : "4TBIWRKG",
+      "Soutenance"   : "4TBIDFNS"
   },
 
   "courses2015" : {
