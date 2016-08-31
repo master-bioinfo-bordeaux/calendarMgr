@@ -233,11 +233,12 @@ router.get('/calendar', function(req, res, next) {
     
     var myYear;
     if (req.query.year === undefined) {
-        mYear = parseInt(settings.default_year) || 1;
+        mYear = parseInt(settings.default_year) || 0;
     }
     else {
         mYear = parseInt(req.query.year);
     }
+    settings.default_year = mYear;
     
     // console.log(JSON.stringify(calendar.data) );
     var now = new Date();
