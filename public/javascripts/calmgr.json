@@ -358,7 +358,33 @@
         "acronym": "Evt::Defense", 
         "apogee": "4TBIDFNS", 
         "tracks": "0x0F"
+      },
+      "Event": {
+        "acronym": "Evt::Event", 
+        "apogee": "4TBIEVNT", 
+        "tracks": "0x00"
+      }, 
+      "Conference": {
+        "acronym": "Evt::Conference", 
+        "apogee": "4TBIMEET", 
+        "tracks": "0x00"
+      }, 
+      "RevuePresse": {
+        "acronym": "Evt::Press", 
+        "apogee": "4TBIPRSS", 
+        "tracks": "0x07"
+      }, 
+      "Vacances": {
+        "acronym": "Evt::Holidays", 
+        "apogee": "4TBIVACA", 
+        "tracks": "0x0F"
+      },
+      "Soutenance": {
+        "acronym": "Evt::Defense", 
+        "apogee": "4TBIDFNS", 
+        "tracks": "0x0F"
       }
+
   },
   "eventTypes" : {
       "Conference"   : "4TBIMEET",
@@ -583,8 +609,8 @@
   ], 
   "students": [
     "All", 
-    "Group A", 
-    "Group B"
+    "A", 
+    "B"
   ], 
   "types": [
     "Unknown", 

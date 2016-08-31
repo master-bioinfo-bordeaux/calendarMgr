@@ -3,16 +3,22 @@ mixin cell(ev)
         div.calTitle
             a(title=ev.ID)=ev.acronym 
             a(href="/delete?id="+ev.ID)
-                i(style="float:right; padding-left: 10px").fa.fa-trash
+                i(style="float:right; padding-left: 6px").fa.fa-trash
             
             a(href="/modify?id="+ev.ID)
-                i(style="float:right").fa.fa-pencil
+                i(style="float:right; padding-left: 6px").fa.fa-pencil
+
+            - if (ev.ID[0] == 'C')
+                a(href="/sessions?id="+ev.ID)
+                    i(style="float:right").fa.fa-calendar
 
         ul.calContent
             li 
                 b=ev.hours
             li=ev.apogee
             li!=ev.lecturer
+            li
+                b='Grp: '+ev.group
             -var campus = ev.location.match(/(.+)::/)[1];
             -var building = ev.location.match(/::(.+)@/)[1];
             -var room = ev.location.match(/@(.+)/)[1];
@@ -45,12 +51,24 @@ block content
         br
         br
                 
-        div.row.col-md-6
-            a.btn.btn-default(href="/previousweek")
-                i.fa.fa-backward.fa-lg
-            span(style="font-size: 20px")= 'Week ' + weeknum
-            a.btn.btn-default(href="/nextweek")
-                i.fa.fa-forward.fa-lg
+        div.row
+            div.col-md-1
+                span(style="font-size: 20px")= 'Week'
+            div.col-md-1
+                a.btn.btn-default(href="/previousweek")
+                    i.fa.fa-backward.fa-lg
+
+            div.col-md-1
+                form(action="/gotoweek", method="POST")
+                    input.form-control.col-md-2(type="text", name="week",value=weeknum,onchange="this.form.submit();")
+            div.col-md-1
+                a.btn.btn-default(href="/nextweek")
+                    i.fa.fa-forward.fa-lg
+            div.col-md-4
+                a.btn.btn-default.btn-md(role="button",href="/calendar?year=0",style="margin-right: 10px") All
+                a.btn.btn-default.btn-md(role="button",href="/calendar?year=1",style="margin-right: 10px") M1
+                a.btn.btn-default.btn-md(role="button",href="/calendar?year=2",style="margin-right: 10px") M2
+                a.btn.btn-default.btn-md(role="button",href="/calendar?year=3",style="margin-right: 10px") M1 and M2
         br
         br
         div.row.no-gutter
@@ -59,7 +77,12 @@ block content
                     sub=days[0].date+days[0].month
                 ul(style="padding-left:5px;")
                     each event in events[1]
-                        +cell(event)
+                        if (event.acronym.substr(0,3) === 'S07' || event.acronym.substr(0,3) === 'S08') && masterYearFilter === 1  
+                            +cell(event)
+                        else if (event.acronym.substr(0,3) === 'S09' || event.acronym.substr(0,3) === 'S10') && masterYearFilter === 2 
+                            +cell(event)
+                        else
+                            +cell(event)
 
                     li(id="new").calCourse 
                         div.calTitle

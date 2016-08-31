@@ -1,0 +1,75 @@
+mixin row(ev,num)
+    tr
+        td=num
+        td=ev.type
+        td!=ev.group
+        td!=ev.lecturer
+        -var building = ev.location.match(/::(.+)@/)[1];
+        -var room = ev.location.match(/@(.+)/)[1];
+        - if (building === 'None')
+            td
+                i.fa.fa-exclamation-triangle(style="color: #f00") No Building
+        - else
+            td= building
+        - if (room === '000')
+            td
+                i.fa.fa-exclamation-triangle(style="color: #f00") No Room
+        - else
+            td= room
+        td= ev.date_start.match(/(.+)T/)[1]
+        td= ev.date_start.match(/T(.+)/)[1] + '-' + ev.date_end.match(/T(.+)/)[1]
+        td
+            i.fa.fa-pencil
+        td 
+            i.fa.fa-trash 
+        td 
+            i.fa.fa-eye 
+
+
+extends layout
+
+block content
+
+    div.splash
+        div.container
+            h1 Calendar Management
+            h2= 'Sessions of ' + sessions[0].acronym +' - ' + sessions[0].apogee
+            hr
+
+    div.container
+        br
+        br
+                
+        table.table.table-striped
+            thead.thead-inverse
+                tr
+                    th #
+                    th Type
+                    th Group
+                    th Lecturer
+                    th Building
+                    th Room
+                    th Date
+                    th Hours
+                    th 
+                        i.fa.fa-pencil
+                    th 
+                        i.fa.fa-trash
+                    th 
+                        i.fa.fa-eye
+            tbody
+                -var num=1
+                each session in sessions
+                    +row(session,num)
+                    - num++
+        br
+        br
+
+
+
+    // jQuery (necessary for Bootstrap's JavaScript plugins)
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
+    // Include all compiled plugins (below), or include individual files as needed
+    script(src="/javascripts/bootstrap.min.js")
+        
+            

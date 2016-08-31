@@ -59,14 +59,14 @@ block content
                     div.col-lg-8.btn-toolbar
                         label.pull-left(style="width:130px") Track [required]:&nbsp;
                         label.btn.btn-danger
-                            input(type="radio",name="track0",value="1") 
+                            input(type="checkbox",name="track0",value="1") 
                             !="C++Bio"
                         label.btn.btn-danger
-                            input(type="radio",name="track1",value="2") 
-                            !="GenOrg"
+                            input(type="checkbox",name="track1",value="2") 
+                            !="GenEco"
                         label.btn.btn-danger
-                            input(type="radio",name="track2",value="4") 
-                            !="OrgEco"
+                            input(type="checkbox",name="track2",value="4") 
+                            !="BAO"
 
                 div.row.col-lg-11
                     br
@@ -80,14 +80,14 @@ block content
                     div.col-lg-8.btn-toolbar
                         label.pull-left(style="width:130px") Track [elective]:&nbsp;
                         label.btn.btn-success
-                            input(type="radio",name="track0",value="16") 
+                            input(type="checkbox",name="track0",value="16") 
                             !="C++Bio"
                         label.btn.btn-success
-                            input(type="radio",name="track1",value="32") 
-                            !="GenOrg"
+                            input(type="checkbox",name="track1",value="32") 
+                            !="GenEco"
                         label.btn.btn-success
-                            input(type="radio",name="track2",value="64") 
-                            !="OrgEco"
+                            input(type="checkbox",name="track2",value="64") 
+                            !="BAO"
 
 
                 div.row.col-lg-11
@@ -133,7 +133,7 @@ block content
                 br
                 div.row.col-lg-4
                     a.btn.btn-default(href="/calendar") Cancel
-                    &nbsp;
+                    label &nbsp;
                     input.btn.btn-default(type="submit", value="Create")
         br
         br

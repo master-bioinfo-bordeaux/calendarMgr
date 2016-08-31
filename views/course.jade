@@ -29,12 +29,12 @@ mixin session(title,num)
     div.col-md-11
         br
         div.col-md-1
-            label Students
+            label Group
         div.col-md-3
             div.form-group
-                select.form-control#students(name="students"+ num )
+                select.form-control#students(name="group"+ num )
                     each group, i in settings.students
-                        +select-option(event.sessions[num].students, group)
+                        +select-option(event.sessions[num].group, group)
             
     div.col-md-11 
         br
