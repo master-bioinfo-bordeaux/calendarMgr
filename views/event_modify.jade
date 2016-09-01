@@ -98,13 +98,13 @@ block content
                         label.pull-left(style="width:130px") Track [required]:&nbsp;
                         label.btn.btn-danger
                             input(type="radio",name="track0",value="1") 
-                            !="C++Bio"
+                            !="CompBio"
                         label.btn.btn-danger
                             input(type="radio",name="track1",value="2") 
-                            !="GenOrg"
+                            !="GenEco"
                         label.btn.btn-danger
                             input(type="radio",name="track2",value="4") 
-                            !="OrgEco"
+                            !="BAO"
 
                 div.row.col-lg-11
                     br
@@ -124,19 +124,19 @@ block content
                             else
                                 input(type="radio",name="track0",value="16") 
 
-                            !="C++Bio"
+                            !="CompBio"
                         label.btn.btn-success
                             if ( (myTracks & 32) == 32)
                                 input(type="radio",name="track1",value="32",checked="checked") 
                             else
                                 input(type="radio",name="track1",value="32") 
-                            !="GenOrg"
+                            !="GenEco"
                         label.btn.btn-success
                             if ( (myTracks & 64) == 64)
                                 input(type="radio",name="track2",value="64",checked="checked") 
                             else
                                 input(type="radio",name="track2",value="64") 
-                            !="OrgEco"
+                            !="BAO"
 
 
                 div.row.col-lg-11
