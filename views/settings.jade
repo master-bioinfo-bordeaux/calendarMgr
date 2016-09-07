@@ -13,13 +13,13 @@ block content
     form.form-horizontal.col-md-offset-1.col-md-6(action="/settings", method="POST")
         div.form-group
             label ID
-            input.form-control(type="text", name="id")
+            input.form-control(type="text", name="id",value=settings.id)
         div.form-group
             label Secret
-            input.form-control(type="text", name="secret")
+            input.form-control(type="text", name="secret",value=settings.secret)
         div.form-group
             label Redirect URI
-            input.form-control(type="text", name="redirect_uri")
+            input.form-control(type="text", name="redirect_uri",value=settings.redirect_uri)
         div.form-group
             label Year
             select.form-control(name="default_year")

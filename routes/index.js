@@ -22,7 +22,9 @@
  * Jean-Christophe Taveau
  */
  
- 
+// http://blog.revathskumar.com/2014/06/express-github-authentication-with-passport.html
+// https://github.com/request/request
+
 var atob = require('atob'); 
 var express = require('express');
 var fs = require('fs');
@@ -64,7 +66,19 @@ if ( !Date.prototype.toCalString ) {
   }() );
 }
 
-
+function updateRepo(res,msg) {
+    // Update github data/calendar.json
+    var ghrepo = me.client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
+    console.log('REPO ' + ghrepo);
+    console.log('SHA ' + calendar.sha);
+    ghrepo.updateContents('data/calendar.json', msg, JSON.stringify(calendar.data,null,2), calendar.sha,function (err, token) {
+        console.log('ERR: '+err);
+        console.log('TOK '+token);
+        if (err === null) {
+            res.redirect("/");
+        }
+    });
+}
 /* GLOBAL */
 
 var router = express.Router();
@@ -421,16 +435,7 @@ router.post('/course', function(req, res, next) {
             console.log(JSON.stringify(calendar.data));
         }
         // Update github data/calendar.json
-        var ghrepo = me.client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
-        console.log('REPO ' + ghrepo);
-        console.log('SHA ' + calendar.sha);
-        ghrepo.updateContents('data/calendar.json', 'New Event', JSON.stringify(calendar.data,null,2), calendar.sha,function (err, token) {
-            console.log('ERR '+err);
-            console.log('TOK '+token);
-            if (err === null) {
-                res.redirect("/calendar");
-            }
-        });
+        updateRepo(res,'New Course');
     }
 
 });
@@ -462,15 +467,7 @@ router.post('/event', function(req, res, next) {
     
     calendar.createEvent(data,event.ID);
     
-    var ghrepo = me.client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
-    ghrepo.updateContents('data/calendar.json', 'New event', unescape(encodeURIComponent(JSON.stringify(calendar.data,null,2))), calendar.sha,function (err, token) {
-        console.log('ERR '+err);
-        console.log('TOK '+token);
-        if (err === null) {
-            res.redirect("/calendar");
-        }
-
-    });
+   updateRepo(res,'New Event');
 });
 
 /**********************************************************
@@ -540,22 +537,17 @@ router.post('/modify', function(req, res, next) {
     var data = req.body;
     var event = {};
     event.ID = data.ID;
+    var msg = 'Modify';
     if (data.ID[0] === "C") {
         calendar.createCourse(data, data.ID);
+        msg += ' Course';
     }
     else if (data.ID[0] === "E") {
         calendar.createEvent(data, data.ID);
+        msg += ' Event';
     }
     // calendar.data[data.ID] = event;
-    var ghrepo = me.client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
-    ghrepo.updateContents('data/calendar.json', 'New event', unescape(encodeURIComponent(JSON.stringify(calendar.data,null,2))), calendar.sha,function (err, token) {
-        console.log('ERR '+err);
-        console.log('TOK '+token);
-        if (err === null) {
-            res.redirect("/calendar");
-        }
-
-    });
+    updateRepo(res,msg);
 
 });
 
@@ -569,15 +561,7 @@ router.post('/modify', function(req, res, next) {
 router.get('/delete', function(req, res, next) {
     console.log('delete GET '+ req.query.id );
     delete calendar.data[req.query.id];
-    var ghrepo = me.client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
-    ghrepo.updateContents('data/calendar.json', 'Delete event', unescape(encodeURIComponent(JSON.stringify(calendar.data,null,2))), calendar.sha,function (err, token) {
-        console.log('ERR '+err);
-        console.log('TOK '+token);
-        if (err === null) {
-            res.redirect("/calendar");
-        }
-
-    });
+    updateRepo(res,'Delete Event');
 });
 
 

@@ -96,7 +96,7 @@ block content
                 input(type="hidden", name="acronym", value= event.acronym )
                 input(type="hidden", name="session", value= event.session )
                 - for (var i = 0; i < event.session ; i++) {
-                    -var session = "Session "+ i
+                    -var session = "Session "+ (i+1)
                     div
                         +session(session,i)
                         -var attributes=({'onclick':'addEntryCourse('+i+')'})

@@ -65,10 +65,22 @@ block content
                 a.btn.btn-default(href="/nextweek")
                     i.fa.fa-forward.fa-lg
             div.col-md-4
-                a.btn.btn-default.btn-md(role="button",href="/calendar?year=0",style="margin-right: 10px") All
-                a.btn.btn-default.btn-md(role="button",href="/calendar?year=1",style="margin-right: 10px") M1
-                a.btn.btn-default.btn-md(role="button",href="/calendar?year=2",style="margin-right: 10px") M2
-                a.btn.btn-default.btn-md(role="button",href="/calendar?year=3",style="margin-right: 10px") M1 and M2
+                if year === 0
+                    a.btn.btn-danger.btn-md(role="button",href="/calendar?year=0",style="margin-right: 10px") All
+                else
+                    a.btn.btn-default.btn-md(role="button",href="/calendar?year=0",style="margin-right: 10px") All
+                if year === 1
+                    a.btn.btn-danger.btn-md(role="button",href="/calendar?year=1",style="margin-right: 10px") M1
+                else
+                    a.btn.btn-default.btn-md(role="button",href="/calendar?year=1",style="margin-right: 10px") M1
+                if year === 2
+                    a.btn.btn-danger.btn-md(role="button",href="/calendar?year=2",style="margin-right: 10px") M2
+                else
+                    a.btn.btn-default.btn-md(role="button",href="/calendar?year=2",style="margin-right: 10px") M2
+                if year === 3
+                    a.btn.btn-danger.btn-md(role="button",href="/calendar?year=3",style="margin-right: 10px") M1 and M2
+                else
+                    a.btn.btn-default.btn-md(role="button",href="/calendar?year=3",style="margin-right: 10px") M1 and M2
         br
         br
         div.row.no-gutter
