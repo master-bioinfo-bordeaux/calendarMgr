@@ -68,13 +68,15 @@ mixin session(title,num)
         div.col-md-1 
             label Location
         div.col-md-3.form-group
-                select.form-control.contents#location(name="location"+ num )
-                    each loc, i in settings.locations
-                        +select-option(event.sessions[num].location, loc)
-        div.col-md-1 
-               label(title="Room or Amphi") Room
+            select.form-control.contents#location(name="location"+ num )
+                each loc, i in settings.locations
+                    +select-option(event.sessions[num].location, loc)
+        div.col-md-2
+            select.form-control.contents#roomamphi(name="roomamphi"+ num )
+                each classroom,i in ['Room','Amphi']
+                    +select-option(event.sessions[num].roomamphi,classroom)
         div.col-md-2 
-                input.form-control#room(name="room"+ num, value=event.sessions[num].room,placeholder="000" )
+            input.form-control#number(name="number"+ num, value=event.sessions[num].number,placeholder="000" )
 
 
 extends layout
@@ -91,7 +93,7 @@ block content
             br
             br
 
-            form.form-inline(action="/course", method="POST")
+            form#course_form.form-inline(action="/course", method="POST",onsubmit="return validate()")
                 input(type="hidden", name="apogee", value= event.apogee )
                 input(type="hidden", name="acronym", value= event.acronym )
                 input(type="hidden", name="session", value= event.session )

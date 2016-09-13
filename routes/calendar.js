@@ -130,7 +130,7 @@ Calendar.prototype.searchWeekEvents = function(mYear) {
     // Search events occuring during this week 
     for (var index in this.data) {
         var element = this.data[index];
-        console.log(mYear + '<=>' + ( parseInt(element.ID[1]) & mYear));
+        // console.log(mYear + '<=>' + ( parseInt(element.ID[1]) & mYear));
         if ( ( parseInt(element.ID[1]) & mYear) === mYear) {
             var startDate = new Date(element.date_start);
             var endDate   = new Date(element.date_end);
@@ -214,7 +214,7 @@ Calendar.prototype.createCourse = function (data,ID) {
     event.date_start = data.date + "T" + data.starthh + ':' + data.startmm;
     event.date_end   = data.date + "T" + data.endhh   + ':' + data.endmm;
     event.group      = data.group;
-    event.location   = data.location + "@" + data.room;
+    event.location   = data.location + "@" + data.roomamphi + '_' + data.number;
     event.description = "None";
     event.comment    = data.title; // Remove semester ???
     console.log('COURSE ' + JSON.stringify(event));
@@ -238,7 +238,7 @@ Calendar.prototype.createEvent = function (data,ID) {
     event.date_start = data.date + "T" + data.starthh + ':' + data.startmm;
     event.date_end   = data.date + "T" + data.endhh   + ':' + data.endmm;
     event.group      = data.group;
-    event.location   = data.location + "@" + data.room;
+    event.location   = data.location + "@" + data.roomamphi + '_' + data.number;
     event.description = data.description;
     event.tracks     = '0x'+tracks.toString(16); 
     

@@ -52,3 +52,30 @@ function addEntryCourse(index) {
     }
     console.log(element.children);
 }
+
+function validate() {
+    var all = document.getElementById("course_form").elements;
+    var max = parseInt(all['session'].value);
+    var error = '';
+    for (var i=0; i < max; i++) {
+        // Date entered?
+        error += (all['date'+i].value === '') ? 'Date Missing in Session '+(i+1)+'\n' : '';
+        // Start time < End time?
+        error += (all['starthh'+i].value +all['startmm'+i].value) >= (all['endhh'+i].value +all['endmm'+i].value) ? 'Hours inconsistency in Session '+(i+1)+ '\n' : '';
+        // Room not empty- default 000
+        if (all['number'+i].value === '' ) {
+            all['number'+i].value = '000';
+        }
+        
+        console.log(all['number'+i].name + '=[' + all['number'+i].value + ']');
+    }
+    if (error === '') {
+        return true;
+    }
+    else {
+        alert('ERROR:\n' + error);
+        return false;
+    }
+}
+
+
