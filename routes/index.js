@@ -392,7 +392,7 @@ router.post('/course', function(req, res, next) {
             mod_event.sessions[i]= {};
         }
         // Fill in session(s)
-        var keynames = ["type","lecturer","group","date","starthh","startmm","endhh","endmm","location","room"];
+        var keynames = ["type","lecturer","group","date","starthh","startmm","endhh","endmm","location","roomamphi","number"];
         for (var i=0; i < keys.length; i++) {
             for (var j=0; j < keynames.length; j++) {
                 if (keys[i].indexOf(keynames[j]) != -1) {

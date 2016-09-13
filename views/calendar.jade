@@ -31,9 +31,12 @@ mixin cell(ev)
             li
                 b Room:
                 = room
-            each warn in ev.warnings
+            if (building == 'None')
                 li 
-                    i.fa.fa-exclamation-triangle(style="color: #f00")!=warn
+                    i.fa.fa-exclamation-triangle(style="color: #f00")!='No building!'
+            if (room == 'Room_000' || room == 'Amphi_000')
+                li 
+                    i.fa.fa-exclamation-triangle(style="color: #f00")!='No Room/Amphi!'
 
 
 
@@ -66,9 +69,9 @@ block content
                     i.fa.fa-forward.fa-lg
             div.col-md-4
                 if year === 0
-                    a.btn.btn-danger.btn-md(role="button",href="/calendar?year=0",style="margin-right: 10px") All
+                    a.btn.btn-danger.btn-md(role="button",href="/calendar?year=0",style="margin-right: 10px") M1 ou M2
                 else
-                    a.btn.btn-default.btn-md(role="button",href="/calendar?year=0",style="margin-right: 10px") All
+                    a.btn.btn-default.btn-md(role="button",href="/calendar?year=0",style="margin-right: 10px") M1 ou M2
                 if year === 1
                     a.btn.btn-danger.btn-md(role="button",href="/calendar?year=1",style="margin-right: 10px") M1
                 else
