@@ -89,17 +89,22 @@
   "people": [
     "------",
     "Baldacci F",
+    "Beauvoit B",
+    "Benois-Pineau J",
+    "Benot ML",
     "Bernaulte JJ",
     "Beurton-Aimar M",
-    "Benois-Pineau J",
-    "Beauvoit B",
+    "Beven L",
     "Bonnafous P",
+    "Bouffier L",
     "Bourqui R",
     "Boussicault A",
     "Boutillier X",
+    "Bujan S",
     "Carrere M",
     "Chaumette S",
-    "Cl&eacute;ment Lionel",
+    "Cl&eacute;ment L",
+    "Cochard D",
     "Colombi&eacute; S",
     "de Daruvar A",
     "David V",
@@ -107,22 +112,29 @@
     "Desbarats P",
     "Dieuaide M",
     "Domenger JP",
+    "Drouineau H",
     "Dubois S",
     "Fi&eacute;vet V",
     "Garenne A",
+    "Grelard A",
     "Gr&eacute;mare A",
+    "Hanquiez V",
     "Hernould M",
     "Heric&eacute; C",
     "H&eacute;ric&eacute; C",
     "Lubac B",
     "Melan&ccedil;on G",
     "Nogu&egrave;s X",
+    "Normandin C",
     "Occala C",
     "Pinaud B",
+    "Schurdi-Levraud V",
     "S&eacute;n&eacute;chal N",
+    "Sirand-Pugnet P",
     "Taveau JC",
     "Th&eacute;bault P",
-    "Uricaru R"
+    "Uricaru R",
+    "Zaragosi S"
   ],
 
   "status" : [
@@ -183,12 +195,12 @@
         "tracks": "0x60"
       },
       "4TBA903U": {
-        "acronym": "S09::QPGE",
+        "acronym": "S09::QPG",
         "apogee": "4TBA903U",
         "tracks": "0x60"
       },
       "4TBA904U": {
-        "acronym": "S09::PlantBr",
+        "acronym": "S09::PDR",
         "apogee": "4TBA904U",
         "tracks": "0x60"
       },
@@ -198,7 +210,7 @@
         "tracks": "0x10"
       },
       "4TBC901U": {
-        "acronym": "S09::AppO",
+        "acronym": "S09::POO++",
         "apogee": "4TBC901U",
         "tracks": "0x10"
       },
@@ -303,7 +315,7 @@
         "tracks": "0x0F"
       },
       "4TBI903U": {
-        "acronym": "S09::ProjLog",
+        "acronym": "S09::GLog",
         "apogee": "4TBI903U",
         "tracks": "0x61"
       },
@@ -333,13 +345,38 @@
         "tracks": "0x60"
       },
       "4TDE902U": {
-        "acronym": "S09::InnovTech",
+        "acronym": "S09::IBS",
         "apogee": "4TDE902U",
         "tracks": "0x60"
       },
       "4TEC701U": {
         "acronym": "S07::TDE",
         "apogee": "4TEC701U",
+        "tracks": "0x0F"
+      },
+      "4TBIEVNT": {
+        "acronym": "Evt::Event",
+        "apogee": "4TBIEVNT",
+        "tracks": "0x00"
+      },
+      "4TBIMEET": {
+        "acronym": "Evt::Conference",
+        "apogee": "4TBIMEET",
+        "tracks": "0x00"
+      },
+      "4TBIPRSS": {
+        "acronym": "Evt::Press",
+        "apogee": "4TBIPRSS",
+        "tracks": "0x07"
+      },
+      "4TBIVACA": {
+        "acronym": "Evt::Holidays",
+        "apogee": "4TBIVACA",
+        "tracks": "0x0F"
+      },
+      "4TBIDFNS": {
+        "acronym": "Evt::Defense",
+        "apogee": "4TBIDFNS",
         "tracks": "0x0F"
       }
   },
@@ -639,6 +676,7 @@
     "Projet",
     "RevuePresse",
     "Soutenance",
+    "Stage",
     "TD",
     "TD machine",
     "TP",
